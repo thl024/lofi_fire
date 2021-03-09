@@ -1,0 +1,39 @@
+.play-button {
+    background-color: #FF9800;
+}
+
+.play-button:focus {
+    background-color: #FF9800;
+}
+
+.play-button:hover {
+    background-color: #FFE0B2;
+}
+
+.stop-button {
+    background-color: #F44336;
+}
+
+.stop-button:focus {
+    background-color: #F44336;
+}
+
+.stop-button:hover {
+    background-color: #000000;
+}
+
+.refresh-button {
+    background-color: #757575;
+}
+
+.refresh-button:focus {
+    background-color: #BDBDBD;
+}
+
+.refresh-button:hover {
+    background-color: #BDBDBD;
+}
+
+.button-wrapper {
+    flex-basis: auto;
+}
