@@ -1,3 +1,23 @@
 .piano-roll-wrapper {
+    /*  Child flex grow property */
     flex-grow: 3;
+
+    /*  Parent flex properties */
+    display: flex;
+    flex-direction: column;
+}
+
+.piano-roll-row-wrapper {
+    /*  Child flex grow property */
+    flex-grow: 1;
+
+
+    /*  Parent flex properties */
+    display: flex;
+    flex-direction: row;
+}
+
+.piano-roll-row-item {
+    /*  Child flex grow property */
+    flex-grow: 1;
 }
