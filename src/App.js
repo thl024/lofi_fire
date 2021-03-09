@@ -1,23 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
+import {ControlBar} from './components/control_bar/ControlBar'
+import {NavBar} from "./components/nav_bar/NavBar";
+import {Playlist} from "./components/playlist/Playlist";
 
 function App() {
+
+  // Requires NavBar component
+  // Playback components
+  // Instrument selection + Piano roll section
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <NavBar />
+        <br />
+        <br />
+        {/*<Banner />*/}
+        <ControlBar />
+        <br />
+        <br />
+        <Playlist />
     </div>
   );
 }

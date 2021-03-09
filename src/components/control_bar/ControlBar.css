@@ -1,0 +1,24 @@
+.playback-button-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-basis: 150px;
+    flex-grow: 1;
+}
+
+.playback-slider-wrapper {
+    flex-basis: 400px;
+    flex-grow: 1;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.playback-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-basis: 150px;
+    flex-grow: 1;
+}

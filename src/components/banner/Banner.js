@@ -1,4 +1,5 @@
 import React from 'react';
+import './Banner.css'
 
 export class Banner extends React.Component {
 
@@ -8,7 +9,7 @@ export class Banner extends React.Component {
 
     render() {
         return <div className="container">
-            <h1>LoFi Fire</h1>
+            <h1 className="title">LoFi Fire</h1>
         </div>
     }
 
