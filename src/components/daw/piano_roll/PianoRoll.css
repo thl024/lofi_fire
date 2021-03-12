@@ -1,0 +1,90 @@
+.piano-roll-wrapper {
+    /*  Child flex grow property */
+    flex-grow: 7;
+    height: 600px;
+
+    /*  Parent flex properties */
+    display: flex;
+    flex-direction: column;
+}
+
+
+.piano-roll-row-header-wrapper {
+    /*  Child flex grow property */
+    flex-grow: 0.4;
+
+    /*  Parent flex properties */
+    display: flex;
+    flex-direction: row;
+
+    /*  CSS Properties  */
+    border-bottom: solid 1px #BDBDBD;
+}
+
+.piano-roll-row-wrapper {
+    /*  Child flex grow property */
+    flex-grow: 1;
+
+    /*  Parent flex properties */
+    display: flex;
+    flex-direction: row;
+
+    /*  CSS Properties  */
+    border-bottom: solid 1px #BDBDBD;
+}
+
+.piano-roll-row-wrapper:nth-child(1) {
+    /*  CSS Properties  */
+    border-top: solid 1px #BDBDBD;
+}
+
+.enabled-note {
+    background-color: #F44336;
+}
+
+.disabled-note {
+    background-color: #FFFFFF;
+}
+
+.piano-roll-row-header-item {
+    /*  Child flex grow property */
+    flex-grow: 1;
+
+    /*  CSS Properties  */
+    /*border-right: solid 1px #FF9800;*/
+    background-color: #757575;
+
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*justify-content: center;*/
+}
+
+.piano-roll-row-header-item-text {
+    color: #FFFFFF;
+    font-size: 14pt;
+    /*margin: 0;*/
+    padding-left: 5px;
+
+    margin: 0px 0px 0 0;
+    /*vertical-align: center;*/
+}
+
+.piano-roll-row-item {
+    /*  Child flex grow property */
+    flex-grow: 1;
+
+    /*  CSS Properties  */
+    border-right: solid 1px #BDBDBD;
+}
+
+.piano-roll-row-item:nth-child(1) {
+    border-left: solid 2px #BDBDBD
+}
+
+.piano-roll-row-item:nth-child(4n+0) {
+    border-right: solid 2px #BDBDBD;
+}
+
+.piano-roll-row-item:hover {
+    background-color: #BDBDBD;
+}

@@ -1,0 +1,6 @@
+.playlist-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+}

@@ -1,8 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
-import {ControlBar} from './components/control_bar/ControlBar'
 import {NavBar} from "./components/nav_bar/NavBar";
-import {Playlist} from "./components/playlist/Playlist";
+import {Daw} from "./components/daw/Daw";
 
 function App() {
 
@@ -15,10 +13,7 @@ function App() {
         <br />
         <br />
         {/*<Banner />*/}
-        <ControlBar />
-        <br />
-        <br />
-        <Playlist />
+        <Daw />
     </div>
   );
 }
