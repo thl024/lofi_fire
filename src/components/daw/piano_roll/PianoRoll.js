@@ -10,7 +10,7 @@ export class PianoRoll extends React.Component {
     }
 
     render() {
-        if (!this.props.data) {
+        if (!this.props.data || this.props.data.length === 0) {
             return <h1>Need data</h1>
         }
 

@@ -3,14 +3,17 @@ import {ControlBar} from "./control_bar/ControlBar";
 import {InstrumentPicker} from "./instrument_picker/InstrumentPicker";
 import {PianoRoll} from "./piano_roll/PianoRoll";
 import './Daw.css';
-import {PlaybackController} from "./PlaybackController";
+import {AudioPlayer} from "./AudioPlayer";
+import {srcMappings} from "./SrcMappings";
 
 // Coordinates the playback control bar with the playlist & instruments
 export class Daw extends React.Component {
 
     constructor(props) {
         super(props);
-        this.playbackController = new PlaybackController();
+        const allKeys = this.initializeNotes();
+
+        // Initialize DAW State
         this.state = {
             bpm: 130,
 
@@ -18,25 +21,44 @@ export class Daw extends React.Component {
             instrumentNames: [],
             selectedIndex: 0,
             numMeasures: 4,
-            numKeys: 12,
+            allKeys: allKeys,
             instrumentData: []
         }
 
+        this.srcMappings = srcMappings;
+        this.audioPlayer = new AudioPlayer(allKeys);
+
         this.onSelectInstrument = this.onSelectInstrument.bind(this);
         this.onClickPianoRoll = this.onClickPianoRoll.bind(this);
+        this.onMouseMove = this.onMouseMove.bind(this);
         this.updateBPM = this.updateBPM.bind(this);
         this.play = this.play.bind(this);
         this.stop = this.stop.bind(this);
         this.refresh = this.refresh.bind(this);
         this.export = this.export.bind(this);
+    }
 
+    componentDidMount() {
         this.onCreateInstrument("Grand Piano");
+    }
+
+    initializeNotes() {
+        const notes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+        const noteRange = [3];
+
+        const allNotes = [];
+        noteRange.forEach(octave => {notes.forEach(note => {
+            allNotes.push(note+octave);
+        })})
+        allNotes.push("C4")
+        return allNotes
     }
 
     play() {
         // TODO
         console.log("Play");
 
+        this.audioPlayer.play("Grand Piano", this.state.bpm, this.state.instrumentData[0]);
     }
 
     stop() {
@@ -50,7 +72,11 @@ export class Daw extends React.Component {
     }
 
     export() {
+        // TODO
+    }
 
+    onMouseMove() {
+        this.audioPlayer.resumeContext();
     }
 
     // Updates the BPM
@@ -76,20 +102,25 @@ export class Daw extends React.Component {
     // Creates a new instrument
     onCreateInstrument(instrumentName) {
         // Load instrument
-        this.playbackController.loadNewInstrument(instrumentName, function(err) {
+        this.audioPlayer.loadSoundLibrary(instrumentName, this.srcMappings[instrumentName], (err) => {
             if (err) {
                 console.log("Failed to load instrument: " + instrumentName + "; " + err.toString());
                 return;
             }
 
+            // Change state
             this.setState(state => {
-                const instruments = [...state.instruments, instrumentName];
+                const instruments = [...state.instrumentNames, instrumentName];
+                const instrumentDatas = [...state.instrumentData, this.initializeEmptyData(this.state.allKeys.length,
+                    state.numMeasures)]
+
                 return {
                     ...state,
-                    instruments: instruments,
+                    instrumentNames: instruments,
+                    instrumentData: instrumentDatas,
                 };
             });
-        })
+        });
     }
 
     // Puts focus on the selected instrument
@@ -120,8 +151,7 @@ export class Daw extends React.Component {
     onClickPianoRoll(row_index, col_index) {
         // Play note if enabling note
         if (!this.state.instrumentData[this.state.selectedIndex][row_index][col_index]) {
-            this.playbackController.playNote(this.state.instrumentNames[this.state.selectedIndex],
-                row_index)
+            this.audioPlayer.playSingleNote(this.state.instrumentNames[this.state.selectedIndex], row_index);
         }
 
         // Change instrument data state
@@ -146,7 +176,7 @@ export class Daw extends React.Component {
     }
 
     render() {
-        return <div>
+        return <div onClick={this.onMouseMove}>
             <ControlBar updateBPM={this.updateBPM}
                         bpm={this.state.bpm}
                         play={this.play}
@@ -161,7 +191,7 @@ export class Daw extends React.Component {
                 <PianoRoll
                     data={this.state.instrumentData[this.state.selectedIndex]}
                     onClickPianoRoll={this.onClickPianoRoll}
-                    numKeys={this.state.numKeys}
+                    numKeys={this.state.allKeys.length}
                     numMeasures={this.state.numMeasures} />
             </div>
 
