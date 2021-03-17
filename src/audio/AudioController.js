@@ -26,11 +26,11 @@ export class AudioController {
         this.audioPlayer.playSample(instrument.id, this.allNotes[index])
     }
 
-    play(bpm, instruments) {
+    play(bpm, instruments, callback) {
         let delay = this.delayPerBeat(bpm);
         let sequence = this.retrieveSequence(instruments);
 
-        this.audioPlayer.playSampleSequence(delay, sequence)
+        this.audioPlayer.playSampleSequence(delay, sequence, callback)
     }
 
     stop() {
@@ -42,7 +42,7 @@ export class AudioController {
         const playedIndices = [];
 
         // For each col (time axis)
-        for (let j = 0; j < instruments[0].data.length; j++) {
+        for (let j = 0; j < instruments[0].data[0].length; j++) {
             let timeIndices = {};
 
             // For each instrument (instrument axis)

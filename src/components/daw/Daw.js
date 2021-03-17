@@ -2,24 +2,19 @@ import React from 'react';
 import {ControlBar} from "./control_bar/ControlBar";
 import {InstrumentPicker} from "./instrument_picker/InstrumentPicker";
 import {PianoRoll} from "./piano_roll/PianoRoll";
-import './Daw.css';
 import {AudioController} from "../../audio/AudioController";
 import {instrumentMappings} from "./InstrumentMappings";
 import { v4 as uuidv4 } from 'uuid';
+import './Daw.css';
 
 // Helpers to initialize DAW state
+// TODO move helpers to new file
 const ALL_KEYS = initializeNotes();
 const NUM_MEASURES = 8;
 const initialState = {
     bpm: 130,
     selectedIndex: 0,
-
-    // TODO rename this to instrument ids
-    // Unfortunately, react does not work well with objects as states, therefore we must split these
-    // instrumentIds: [],
-    // instrumentData: [],
-    // instrumentTypes: [],
-
+    playIndex: -1,
 
     // Contains Name, Data, Type, & Src
     instruments: []
@@ -35,20 +30,20 @@ function initializeNotes() {
     allNotes.unshift("C5")
     return allNotes
 }
-// function packageTracks(instrumentIds, instrumentNames, instrumentData, instrumentTypes) {
-//     let tracks = [];
-//     for (let i = 0; i < instrumentIds.length; i++) {
-//         tracks.push({
-//             "id":  instrumentIds[i],
-//             "name": instrumentNames[i],
-//             "data": instrumentData[i],
-//             "type": instrumentTypes[i]
-//         });
-//     }
-//     return tracks;
-// }
+function initializeEmptyData() {
+    let midi = [];
+    for (let i = 0; i < ALL_KEYS.length; i++) {
+        let new_row = [];
+        for (let j = 0; j < NUM_MEASURES * 4; j++)  {
+            new_row.push(false);
+        }
+        midi.push(new_row);
+    }
+    return midi;
+}
 
-// Coordinates the playback control bar with the playlist & instruments
+// Main controller, manages data flow between all children
+// (instrument selector, playlist, control bar, audio playback)
 export class Daw extends React.Component {
 
     constructor(props) {
@@ -61,6 +56,7 @@ export class Daw extends React.Component {
 
         // Bindings
         this.onSelectInstrument = this.onSelectInstrument.bind(this);
+        this.onRefreshInstrument = this.onRefreshInstrument.bind(this);
         this.onClickPianoRoll = this.onClickPianoRoll.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
         this.updateBPM = this.updateBPM.bind(this);
@@ -70,7 +66,7 @@ export class Daw extends React.Component {
         this.export = this.export.bind(this);
     }
 
-    // Initialize instrument on page load
+    // Initialize instruments on page load
     componentDidMount() {
         this.seedInitialInstruments();
     }
@@ -78,14 +74,31 @@ export class Daw extends React.Component {
     seedInitialInstruments() {
         this.onCreateInstrument("Grand Piano");
         this.onCreateInstrument("Nylon Guitar");
+        this.onCreateInstrument("Lofi Kick 1");
+        this.onCreateInstrument("Lofi Hat 1");
     }
 
     play() {
-        this.audioController.play(this.state.bpm, this.state.instruments)
+        // Play is an asynchronous operation, require callback to retrieve tick information
+        this.audioController.play(this.state.bpm, this.state.instruments, (index) => {
+            // Callback called on every tick, set play index
+            this.setState((state) => {
+                return {
+                    ...state,
+                    playIndex: index,
+                }
+            });
+        });
     }
 
     stop() {
         this.audioController.stop();
+        this.setState((state) => {
+           return {
+               ...state,
+               playIndex: -1
+           }
+        });
     }
 
     refresh() {
@@ -113,19 +126,7 @@ export class Daw extends React.Component {
         });
     };
 
-    initializeEmptyData() {
-        let midi = [];
-        for (let i = 0; i < ALL_KEYS.length; i++) {
-            let new_row = [];
-            for (let j = 0; j < NUM_MEASURES * 4; j++)  {
-                new_row.push(false);
-            }
-            midi.push(new_row);
-        }
-        return midi;
-    }
-
-    // TODO more params
+    // TODO more params (e.g. color)
     // Creates a new instrument
     onCreateInstrument(instrumentName) {
         let newInstrument = {
@@ -134,7 +135,7 @@ export class Daw extends React.Component {
             "src": this.instrumentMappings[instrumentName].src,
             "instType": this.instrumentMappings[instrumentName].instType,
             "fileType": this.instrumentMappings[instrumentName].fileType,
-            "data": this.initializeEmptyData()
+            "data": initializeEmptyData()
         }
 
         // Load instrument
@@ -161,6 +162,21 @@ export class Daw extends React.Component {
             return {
                 ...state,
                 selectedIndex: index
+            }
+        })
+    }
+
+    onRefreshInstrument(index) {
+        // Change instrument data state
+        this.setState(state => {
+            let newData = initializeEmptyData();
+
+            //Set new data
+            return {
+                ...state,
+                instruments: state.instruments.map(
+                    (el, index) => index === state.selectedIndex ? { ...el, data: newData }: el
+                )
             }
         })
     }
@@ -222,10 +238,12 @@ export class Daw extends React.Component {
             <div className="playlist-wrapper">
                 <InstrumentPicker instruments={this.state.instruments}
                                   selectedIndex={this.state.selectedIndex}
+                                  onRefreshInstrument={this.onRefreshInstrument}
                                   onSelectInstrument={this.onSelectInstrument} />
                 <PianoRoll
                     data={this.state.instruments.length > 0 ?
                         this.state.instruments[this.state.selectedIndex].data:null}
+                    playIndex={this.state.playIndex}
                     onClickPianoRoll={this.onClickPianoRoll}
                     numKeys={ALL_KEYS.length}
                     numMeasures={NUM_MEASURES} />

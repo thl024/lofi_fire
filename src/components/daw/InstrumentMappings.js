@@ -17,5 +17,10 @@ export const instrumentMappings = {
         "src": BASE_SOUND_RESOURCE_URL + "kicks/kick1",
         "instType": "perc",
         "fileType": "wav"
+    },
+    "Lofi Hat 1": {
+        "src": BASE_SOUND_RESOURCE_URL + "hats/hat1",
+        "instType": "perc",
+        "fileType": "wav"
     }
 }

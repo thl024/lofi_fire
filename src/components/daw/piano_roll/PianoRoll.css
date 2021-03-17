@@ -52,7 +52,6 @@
 
     /*  CSS Properties  */
     /*border-right: solid 1px #FF9800;*/
-    background-color: #757575;
 
     /*display: flex;*/
     /*flex-direction: row;*/
@@ -87,4 +86,12 @@
 
 .piano-roll-row-item:hover {
     background-color: #BDBDBD;
+}
+
+.non-tick-color {
+    background-color: #757575;
+}
+
+.tick-color {
+    background-color: #FF9800;
 }

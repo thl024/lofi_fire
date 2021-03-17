@@ -28,8 +28,8 @@ export class InstrumentPicker extends React.Component {
                             const selected = index === this.props.selectedIndex;
                             return <InstrumentPickerRow index={index}
                                                         instrument={instrument.name}
-
                                                         // TODO -- Pass in from DAW?
+                                                        onRefresh={this.props.onRefreshInstrument}
                                                         onEdit={this.onEditInstrument}
                                                         onDelete={this.onDeleteInstrument}
                                                         onSelect={this.props.onSelectInstrument}

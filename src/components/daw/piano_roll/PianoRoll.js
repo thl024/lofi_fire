@@ -15,10 +15,28 @@ export class PianoRoll extends React.Component {
         }
 
         let first_row = [];
-        for (let i = 0; i < this.props.numMeasures; i++) {
-            let text = i !== 0 ? i+1 : i+1;
-            first_row.push(<div className="piano-roll-row-header-item"  key={"h"+i.toString()}>
-                <p className="piano-roll-row-header-item-text">{text}</p>
+        for (let i = 0; i < this.props.numMeasures*4; i++) {
+
+
+            // Add border to right side if playing
+            if (this.props.playIndex !== -1 && i === this.props.playIndex) {
+
+            }
+
+            // Number every 4 elements
+            let headerText = "";
+            if (i % 4 === 0) {
+                headerText = i/4;
+            }
+            let divClassName = "piano-roll-row-header-item";
+            if (i === this.props.playIndex) {
+                divClassName += " tick-color";
+            } else{
+                divClassName += " non-tick-color";
+            }
+
+            first_row.push(<div className={divClassName} key={"h"+i.toString()}>
+                <p className="piano-roll-row-header-item-text">{headerText}</p>
             </div>)
         }
 

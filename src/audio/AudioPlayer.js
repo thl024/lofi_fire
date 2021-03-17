@@ -5,6 +5,7 @@ export class AudioPlayer {
 
     constructor() {
         this.preloadedAudio = {};
+        this.typeMap = {};
         this.currentTimer = null;
     }
 
@@ -32,6 +33,7 @@ export class AudioPlayer {
         let totalNoteCount = notes.length;
         let errorOccured = false;
         let preloadedAudio = this.preloadedAudio;
+        let typeMap = this.typeMap;
 
         // Load all notes for given library
         notes.forEach(namedNote => {
@@ -49,6 +51,8 @@ export class AudioPlayer {
                 notesLoaded += 1
                 if (totalNoteCount === notesLoaded) {
                     preloadedAudio[id] = noteMap;
+                    typeMap[id] = "toned";
+
                     callback(null)
                 }
             });
@@ -56,48 +60,62 @@ export class AudioPlayer {
     }
 
     loadPercSoundLibrary(id, src, fileType, callback) {
+        let typeMap = this.typeMap;
+
         this.preloadedAudio[id] = new Pizzicato.Sound({
             source: 'file',
-            options: { path: src + fileType }
+            options: { path: src + "." + fileType }
         }, function(error) {
             if (error) {
                 callback(error)
                 return;
             }
+            typeMap[id] = "perc";
             callback(null);
         })
     }
 
     unloadSoundLibrary(id) {
-        this.preloadedAudio.delete(id)
+        this.preloadedAudio.delete(id);
+        this.typeMap.delete(id);
     }
 
     playSample(id, note) {
-        const sample = this.preloadedAudio[id][note];
+        let sample;
+        if (this.typeMap[id] === "perc") {
+            sample = this.preloadedAudio[id];
+        } else {
+            sample = this.preloadedAudio[id][note];
+        }
         sample.stop();
         sample.play();
     }
 
-    playSampleSequence(delay, sequence) {
+    playSampleSequence(delay, sequence, callback) {
         if (this.currentTimer) {
-            this.stop()
+            this.stop();
         }
 
-        this.recursivePlay(sequence, delay)
+        // Play forever until user stops (ending current timer)
+        this.recursivePlay([...sequence], sequence, delay, callback);
     }
 
-    recursivePlay(sequence, delay) {
-        if (sequence.length === 0) {
-            this.currentTimer =  null;
-            return;
+    recursivePlay(fullSequence, tempSequence, delay, callback) {
+        if (tempSequence.length === 0) {
+            // Repeat sequence
+            tempSequence = [...fullSequence];
         }
 
-        const notes = sequence[0];
+        const notes = tempSequence[0];
         this.playGroup(notes)
 
         this.currentTimer = setTimeout(() => {
-           sequence.shift()
-           this.recursivePlay(sequence, delay)
+            tempSequence.shift()
+
+            // Notify that one tick has passed
+            callback(fullSequence.length - tempSequence.length);
+
+            this.recursivePlay(fullSequence, tempSequence, delay, callback)
         }, delay)
     }
 
@@ -113,9 +131,13 @@ export class AudioPlayer {
             this.currentTimer = null;
         }
 
-        for (const [, notes] of  Object.entries(this.preloadedAudio)) {
-            for (const [, note] of Object.entries(notes)) {
-                note.stop();
+        for (const [id, notes] of  Object.entries(this.preloadedAudio)) {
+            if (this.typeMap[id] === "perc") {
+                notes.stop();
+            } else {
+                for (const [, note] of Object.entries(notes)) {
+                    note.stop();
+                }
             }
         }
     }

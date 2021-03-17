@@ -10,6 +10,10 @@ export class InstrumentPickerRow extends React.Component {
         return <div className={instrumentRowClasses} onClick={() => this.props.onSelect(this.props.index)}>
             <p className="instrument-text">{this.props.instrument}</p>
             <button className="btn-floating btn-large waves-effect waves-light instrument-edit-button"
+                    onClick={() => this.props.onRefresh(this.props.index)}>
+                <i className="material-icons">refresh</i>
+            </button>
+            <button className="btn-floating btn-large waves-effect waves-light instrument-edit-button"
                 onClick={() => this.props.onEdit(this.props.index)}>
                 <i className="material-icons">edit</i>
             </button>
