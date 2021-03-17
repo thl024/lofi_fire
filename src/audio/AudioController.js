@@ -14,13 +14,13 @@ export class AudioController {
     }
 
     loadInstrument(instrument, callback) {
-        this.audioPlayer.loadSoundLibrary(instrument.id, instrument.src, this.allNotes, callback)
+        this.audioPlayer.loadSoundLibrary(instrument.id, instrument.src, instrument.instType,
+            instrument.fileType, this.allNotes, callback)
     }
 
     unloadInstrument(instrument) {
         this.audioPlayer.unloadSoundLibrary(instrument.id)
     }
-
 
     playSingleNote(instrument, index) {
         this.audioPlayer.playSample(instrument.id, this.allNotes[index])
@@ -28,7 +28,6 @@ export class AudioController {
 
     play(bpm, instruments) {
         let delay = this.delayPerBeat(bpm);
-        console.log(instruments)
         let sequence = this.retrieveSequence(instruments);
 
         this.audioPlayer.playSampleSequence(delay, sequence)
@@ -49,7 +48,6 @@ export class AudioController {
             // For each instrument (instrument axis)
             for (let index = 0; index < instruments.length; index++){
 
-                // TODO check if instrument is percussion
                 const m = instruments[index].data;
                 let indices = []
 

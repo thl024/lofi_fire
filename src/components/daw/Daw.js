@@ -132,7 +132,8 @@ export class Daw extends React.Component {
             "id": uuidv4(),
             "name": instrumentName,
             "src": this.instrumentMappings[instrumentName].src,
-            "type": this.instrumentMappings[instrumentName].type,
+            "instType": this.instrumentMappings[instrumentName].instType,
+            "fileType": this.instrumentMappings[instrumentName].fileType,
             "data": this.initializeEmptyData()
         }
 
@@ -202,7 +203,6 @@ export class Daw extends React.Component {
             //Set new data
             return {
                 ...state,
-                // instrumentData: items
                 instruments: state.instruments.map(
                     (el, index) => index === state.selectedIndex? { ...el, data: newData }: el
                 )

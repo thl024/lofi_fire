@@ -13,27 +13,31 @@ export class AudioPlayer {
     }
 
     // Loads all named notes for a particular instrument
-    loadSoundLibrary(id, src, notes, callback) {
+    loadSoundLibrary(id, src, instType, fileType, notes, callback) {
         if (id in this.preloadedAudio) { // Instrument already loaded
             callback(null);
             return;
         }
 
+        switch (instType) {
+            case "toned": this.loadNotedSoundLibrary(id,  src, fileType, notes, callback); break;
+            case "perc": this.loadPercSoundLibrary(id, src, fileType, callback); break;
+        }
+    }
+
+    loadNotedSoundLibrary(id, src, fileType, notes, callback) {
         // Begin loading each note
         let noteMap = {};
-        let notesLoaded  = 0;
-        var totalNoteCount = notes.length;
-        var errorOccured = false
-        var preloadedAudio = this.preloadedAudio
-
+        let notesLoaded = 0;
+        let totalNoteCount = notes.length;
+        let errorOccured = false;
+        let preloadedAudio = this.preloadedAudio;
 
         // Load all notes for given library
         notes.forEach(namedNote => {
-            // TODO -- support for other file types other than mp3?
-            const noteDir = src + namedNote + ".mp3";
             noteMap[namedNote] = new Pizzicato.Sound({
                 source: 'file',
-                options: { path: noteDir }
+                options: { path: src + namedNote + "." +  fileType }
             }, function(error) {
                 if (error) { // Process error
                     errorOccured = true;
@@ -49,6 +53,19 @@ export class AudioPlayer {
                 }
             });
         });
+    }
+
+    loadPercSoundLibrary(id, src, fileType, callback) {
+        this.preloadedAudio[id] = new Pizzicato.Sound({
+            source: 'file',
+            options: { path: src + fileType }
+        }, function(error) {
+            if (error) {
+                callback(error)
+                return;
+            }
+            callback(null);
+        })
     }
 
     unloadSoundLibrary(id) {
@@ -102,8 +119,4 @@ export class AudioPlayer {
             }
         }
     }
-
-
-
-
 }
