@@ -26,7 +26,10 @@ export class InstrumentPicker extends React.Component {
                     <div className="scroll-area">
                         {this.props.instruments.map((instrument, index, _) => {
                             const selected = index === this.props.selectedIndex;
-                            return <InstrumentPickerRow index={index} instrument={instrument}
+                            return <InstrumentPickerRow index={index}
+                                                        instrument={instrument.name}
+
+                                                        // TODO -- Pass in from DAW?
                                                         onEdit={this.onEditInstrument}
                                                         onDelete={this.onDeleteInstrument}
                                                         onSelect={this.props.onSelectInstrument}

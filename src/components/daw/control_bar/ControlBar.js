@@ -11,7 +11,7 @@ export class ControlBar extends React.Component {
        return <div className="playback-wrapper container">
            <div className="playback-button-wrapper">
                <PlayButton play={this.props.play} />
-               <StopButton pause={this.props.stop} />
+               <StopButton stop={this.props.stop} />
            </div>
            <div className="playback-slider-wrapper">
                <BPMSlider updateBPM={this.props.updateBPM}
