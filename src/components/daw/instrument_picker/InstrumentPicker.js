@@ -22,7 +22,13 @@ export class InstrumentPicker extends React.Component {
     render() {
         return <div className="instrument-picker-wrapper">
                 <ul className="instrument-list">
-                    <li className="instrument-picker-header-text">Instruments</li>
+                    <div className="instrument-picker-header">
+                        <li className="instrument-picker-header-text">Instruments</li>
+                        <button className="btn-floating btn-large waves-effect waves-light add-button"
+                                onClick>
+                            <i className="material-icons">add</i>
+                        </button>
+                    </div>
                     <div className="scroll-area">
                         {this.props.instruments.map((instrument, index, _) => {
                             const selected = index === this.props.selectedIndex;

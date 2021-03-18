@@ -21,6 +21,11 @@
     flex-direction: column;
 }
 
+.instrument-picker-header {
+    display:flex;
+    flex-direction: row;
+}
+
 .instrument-picker-header-wrapper {
     background-color: #FF9800;
 
@@ -37,6 +42,10 @@
     font-size: 1.5em;
     border-bottom: solid 2px #757575;
 
+    flex-grow: 1;
+}
+
+.add-button {
     flex-grow: 0;
 }
 
