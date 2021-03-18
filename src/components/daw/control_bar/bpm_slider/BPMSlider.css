@@ -2,20 +2,16 @@
     color: #FF9800;
     font-family: GillSans, Calibri, Trebuchet, sans-serif;
     font-size: medium;
-}
-
-.bpm-slider .noUi-connect {
-    color: #FF9800;
-    background-color: #FF9800;
+    width: 30px;
 }
 
 .bpm-slider {
-    width: 75%;
+    width: 50%;
 }
 
 .playback-slider {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }

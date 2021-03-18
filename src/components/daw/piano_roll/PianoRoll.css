@@ -1,7 +1,7 @@
 .piano-roll-wrapper {
     /*  Child flex grow property */
     flex-grow: 7;
-    height: 600px;
+    /*height: 600px;*/
 
     /*  Parent flex properties */
     display: flex;
@@ -60,7 +60,7 @@
 
 .piano-roll-row-header-item-text {
     color: #FFFFFF;
-    font-size: 14pt;
+    font-size: 1vw;
     /*margin: 0;*/
     padding-left: 5px;
 

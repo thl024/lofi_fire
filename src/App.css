@@ -36,3 +36,18 @@
 /*    transform: rotate(360deg);*/
 /*  }*/
 /*}*/
+
+.App {
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    color: #FF9800;
+}
+
+.footer {
+    background-color: #FF9800;
+}

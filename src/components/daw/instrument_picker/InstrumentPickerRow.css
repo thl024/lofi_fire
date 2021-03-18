@@ -2,6 +2,7 @@
     /*flex-basis: 100px*/
     height: 50px;
     border-bottom: #BDBDBD 1px solid;
+    cursor: pointer;
 
     /* Flexbox */
     display: flex;

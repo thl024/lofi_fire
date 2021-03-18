@@ -1,5 +1,4 @@
-// import {Howl} from 'howler';
-import * as Pizzicato from 'pizzicato';
+import {Howl} from 'howler';
 
 export class AudioPlayer {
 
@@ -7,10 +6,6 @@ export class AudioPlayer {
         this.preloadedAudio = {};
         this.typeMap = {};
         this.currentTimer = null;
-    }
-
-    resumeContext() {
-        Pizzicato.context.resume();
     }
 
     // Loads all named notes for a particular instrument
@@ -37,42 +32,44 @@ export class AudioPlayer {
 
         // Load all notes for given library
         notes.forEach(namedNote => {
-            noteMap[namedNote] = new Pizzicato.Sound({
-                source: 'file',
-                options: { path: src + namedNote + "." +  fileType }
-            }, function(error) {
-                if (error) { // Process error
-                    errorOccured = true;
-                    callback(error)
-                }
-                if (errorOccured) {
-                    return;
-                }
-                notesLoaded += 1
-                if (totalNoteCount === notesLoaded) {
-                    preloadedAudio[id] = noteMap;
-                    typeMap[id] = "toned";
+            let sound = new Howl({
+                src: [src + namedNote + "." +  fileType],
+                onload: () => {
+                    if (errorOccured) {
+                        return;
+                    }
 
-                    callback(null)
+                    noteMap[namedNote] = sound;
+                    notesLoaded += 1;
+
+                    if (totalNoteCount === notesLoaded) {
+                        preloadedAudio[id] = noteMap;
+                        typeMap[id] = "toned";
+                        callback(null)
+                    }
+                },
+                onloaderror: (howlId, err) => {
+                    if (!errorOccured) { // Process error
+                        callback(err)
+                        errorOccured = true;
+                    }
                 }
             });
         });
     }
 
     loadPercSoundLibrary(id, src, fileType, callback) {
-        let typeMap = this.typeMap;
-
-        this.preloadedAudio[id] = new Pizzicato.Sound({
-            source: 'file',
-            options: { path: src + "." + fileType }
-        }, function(error) {
-            if (error) {
-                callback(error)
-                return;
+        let sound = new Howl({
+            src: [src + "." + fileType],
+            onload: () => {
+                this.typeMap[id] = "perc";
+                this.preloadedAudio[id] = sound;
+                callback(null);
+            },
+            onloaderror: (howlId, err) => {
+                callback(err);
             }
-            typeMap[id] = "perc";
-            callback(null);
-        })
+        });
     }
 
     unloadSoundLibrary(id) {
@@ -87,7 +84,6 @@ export class AudioPlayer {
         } else {
             sample = this.preloadedAudio[id][note];
         }
-        sample.stop();
         sample.play();
     }
 

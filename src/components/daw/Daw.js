@@ -12,7 +12,7 @@ import './Daw.css';
 const ALL_KEYS = initializeNotes();
 const NUM_MEASURES = 8;
 const initialState = {
-    bpm: 130,
+    bpm: 80,
     selectedIndex: 0,
     playIndex: -1,
 
@@ -58,7 +58,6 @@ export class Daw extends React.Component {
         this.onSelectInstrument = this.onSelectInstrument.bind(this);
         this.onRefreshInstrument = this.onRefreshInstrument.bind(this);
         this.onClickPianoRoll = this.onClickPianoRoll.bind(this);
-        this.onMouseMove = this.onMouseMove.bind(this);
         this.updateBPM = this.updateBPM.bind(this);
         this.play = this.play.bind(this);
         this.stop = this.stop.bind(this);
@@ -72,10 +71,10 @@ export class Daw extends React.Component {
     }
 
     seedInitialInstruments() {
-        this.onCreateInstrument("Grand Piano");
-        this.onCreateInstrument("Nylon Guitar");
-        this.onCreateInstrument("Lofi Kick 1");
-        this.onCreateInstrument("Lofi Hat 1");
+        this.onCreateInstrument("Grand Piano", "#fec8c1");
+        this.onCreateInstrument("Nylon Guitar", "#fad9c1");
+        this.onCreateInstrument("Lofi Kick 1", "#ffefd7");
+        this.onCreateInstrument("Lofi Hat 1", "#dcedc1");
     }
 
     play() {
@@ -115,27 +114,24 @@ export class Daw extends React.Component {
         // TODO
     }
 
-    onMouseMove() {
-        this.audioController.resume();
-    }
-
     // Updates the BPM
-    updateBPM = () => (render, handle, value, un, percent) => {
+    updateBPM = () => (value) => {
         this.setState({
-            "bpm": value[0]
+            "bpm": value
         });
     };
 
     // TODO more params (e.g. color)
     // Creates a new instrument
-    onCreateInstrument(instrumentName) {
+    onCreateInstrument(instrumentName, instrumentColor) {
         let newInstrument = {
             "id": uuidv4(),
             "name": instrumentName,
             "src": this.instrumentMappings[instrumentName].src,
             "instType": this.instrumentMappings[instrumentName].instType,
             "fileType": this.instrumentMappings[instrumentName].fileType,
-            "data": initializeEmptyData()
+            "data": initializeEmptyData(),
+            "color": instrumentColor
         }
 
         // Load instrument
@@ -166,7 +162,7 @@ export class Daw extends React.Component {
         })
     }
 
-    onRefreshInstrument(index) {
+    onRefreshInstrument(instrumentIndex) {
         // Change instrument data state
         this.setState(state => {
             let newData = initializeEmptyData();
@@ -175,7 +171,7 @@ export class Daw extends React.Component {
             return {
                 ...state,
                 instruments: state.instruments.map(
-                    (el, index) => index === state.selectedIndex ? { ...el, data: newData }: el
+                    (el, index) => index === instrumentIndex ? { ...el, data: newData }: el
                 )
             }
         })
@@ -183,11 +179,6 @@ export class Daw extends React.Component {
 
     // TODO more params - edit color
     onEditInstrument(index) {
-
-    }
-
-    // Clears the data for a given instrument
-    onResetInstrument(index) {
 
     }
 
@@ -201,7 +192,6 @@ export class Daw extends React.Component {
 
         // Play note if enabling note
         if (!currentInstrument.data[row_index][col_index]){
-            // TODO -- intermediary between audio player and daw to translate indices to note names
             this.audioController.playSingleNote(currentInstrument, row_index);
         }
 
@@ -227,28 +217,33 @@ export class Daw extends React.Component {
     }
 
     render() {
-        return <div onClick={this.onMouseMove}>
-            <ControlBar updateBPM={this.updateBPM}
-                        bpm={this.state.bpm}
-                        play={this.play}
-                        stop={this.stop}
-                        refresh={this.refresh}
-                        export={this.export} />
-            <br />
-            <div className="playlist-wrapper">
+        let pianoRollSection=<div className="playlist-wrapper"><h1>Loading...</h1></div>
+        if (this.state.instruments.length > 0 && this.state.instruments[this.state.selectedIndex].data.length !== 0) {
+            pianoRollSection = <div className="playlist-wrapper">
                 <InstrumentPicker instruments={this.state.instruments}
                                   selectedIndex={this.state.selectedIndex}
                                   onRefreshInstrument={this.onRefreshInstrument}
                                   onSelectInstrument={this.onSelectInstrument} />
                 <PianoRoll
-                    data={this.state.instruments.length > 0 ?
-                        this.state.instruments[this.state.selectedIndex].data:null}
+                    instrument={this.state.instruments[this.state.selectedIndex]}
                     playIndex={this.state.playIndex}
                     onClickPianoRoll={this.onClickPianoRoll}
                     numKeys={ALL_KEYS.length}
                     numMeasures={NUM_MEASURES} />
             </div>
+        }
 
+        return <div className={"mainApp"} >
+            <ControlBar
+                className={"controlBar"}
+                updateBPM={this.updateBPM}
+                bpm={this.state.bpm}
+                play={this.play}
+                stop={this.stop}
+                refresh={this.refresh}
+                export={this.export} />
+            <br />
+            {pianoRollSection}
         </div>
     }
 }

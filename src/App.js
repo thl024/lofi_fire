@@ -1,6 +1,7 @@
 import './App.css';
 import {NavBar} from "./components/nav_bar/NavBar";
 import {Daw} from "./components/daw/Daw";
+import React from "react";
 
 function App() {
 
@@ -9,11 +10,13 @@ function App() {
   // Instrument selection + Piano roll section
   return (
     <div className="App">
-        <NavBar />
-        <br />
-        <br />
+        <h2 className={"title"}>Chill Fire</h2>
+        {/*<NavBar />*/}
+        {/*<br />*/}
+        {/*<br />*/}
         {/*<Banner />*/}
         <Daw />
+        <footer className="page-footer footer" />
     </div>
   );
 }

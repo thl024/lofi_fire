@@ -10,19 +10,8 @@ export class PianoRoll extends React.Component {
     }
 
     render() {
-        if (!this.props.data || this.props.data.length === 0) {
-            return <h1>Need data</h1>
-        }
-
         let first_row = [];
         for (let i = 0; i < this.props.numMeasures*4; i++) {
-
-
-            // Add border to right side if playing
-            if (this.props.playIndex !== -1 && i === this.props.playIndex) {
-
-            }
-
             // Number every 4 elements
             let headerText = "";
             if (i % 4 === 0) {
@@ -44,13 +33,15 @@ export class PianoRoll extends React.Component {
         for (let j = 0; j < this.props.numKeys; j++) {
             let new_row = []
             for (let i = 0; i < (this.props.numMeasures)*4; i++) {
-                let classNames = "piano-roll-row-item"
-                if (this.props.data[j][i]) {
-                    classNames += " enabled-note"
+                // let classNames =
+                let style = {}
+                if (this.props.instrument.data[j][i]) {
+                    // classNames += " enabled-note"
+                    style = {backgroundColor: this.props.instrument.color}
                 } else {
-                    classNames += " disabled-note"
+                    // classNames += " disabled-note"
                 }
-                new_row.push(<div className={classNames} onClick={() => this.props.onClickPianoRoll(j, i)}
+                new_row.push(<div style={style} className={"piano-roll-row-item"} onClick={() => this.props.onClickPianoRoll(j, i)}
                                   key={i.toString() + j.toString()} />)
             }
             rows.push(<div className="piano-roll-row-wrapper" key={j.toString()} >

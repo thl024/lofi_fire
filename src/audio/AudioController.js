@@ -8,11 +8,6 @@ export class AudioController {
         this.allNotes = allNotes;
     }
 
-    // Maybe not necessary
-    resume() {
-        this.audioPlayer.resumeContext();
-    }
-
     loadInstrument(instrument, callback) {
         this.audioPlayer.loadSoundLibrary(instrument.id, instrument.src, instrument.instType,
             instrument.fileType, this.allNotes, callback)
