@@ -1,6 +1,7 @@
 import React from 'react';
 import './InstrumentPicker.css'
 import {InstrumentPickerRow} from "./InstrumentPickerRow";
+import {InstrumentAdder} from "./InstrumentAdder";
 
 export class InstrumentPicker extends React.Component {
 
@@ -8,6 +9,27 @@ export class InstrumentPicker extends React.Component {
         super(props);
         this.onEditInstrument = this.onEditInstrument.bind(this);
         this.onDeleteInstrument = this.onDeleteInstrument.bind(this);
+        this.onOpenAddInstrumentModal = this.onOpenAddInstrumentModal.bind(this);
+        this.onCloseAddInstrumentModal = this.onCloseAddInstrumentModal.bind(this);
+        this.state = {
+            "modalOpen": false
+        }
+    }
+
+    onOpenAddInstrumentModal() {
+        this.setState(state => {
+            return {
+                "modalOpen": true
+            }
+        })
+    }
+
+    onCloseAddInstrumentModal() {
+        this.setState(state => {
+            return {
+                "modalOpen": false
+            }
+        })
     }
 
     onEditInstrument(index) {
@@ -25,7 +47,7 @@ export class InstrumentPicker extends React.Component {
                     <div className="instrument-picker-header">
                         <li className="instrument-picker-header-text">Instruments</li>
                         <button className="btn-floating btn-large waves-effect waves-light add-button"
-                                onClick>
+                                onClick={this.onOpenAddInstrumentModal}>
                             <i className="material-icons">add</i>
                         </button>
                     </div>
@@ -45,6 +67,7 @@ export class InstrumentPicker extends React.Component {
                         })}
                     </div>
                 </ul>
+            <InstrumentAdder open={this.state.modalOpen} onClose={this.onCloseAddInstrumentModal} />
         </div>
     }
 

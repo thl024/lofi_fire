@@ -1,16 +1,37 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
 import React from 'react';
-import 'rc-slider/assets/index.css'
 import Slider from 'rc-slider';
-import './BPMSlider.css'
+import 'rc-slider/assets/index.css'
+import { jsx, css } from '@emotion/react'
+
+// CSS
+const sliderDivStyle = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const bpmTextStyle = css`
+  color: #FF9800;
+  font-family: GillSans, Calibri, Trebuchet, sans-serif;
+  font-size: medium;
+  width: 30px;
+`
+
+const bpmSliderStyle = css`
+  width: 50%;
+`
 
 export class BPMSlider extends React.Component {
     render() {
         // Slider color
         let sliderColor = "#FF9800"
-        return <div className="playback-slider">
-            <p className="bpm-text">Tempo: </p>
+        return <div css={sliderDivStyle}>
+            <p css={bpmTextStyle}>Tempo: </p>
             <Slider
-                className="bpm-slider"
+                css={bpmSliderStyle}
                 defaultValue={this.props.bpm}
                 min={50}
                 max={130}
@@ -29,19 +50,7 @@ export class BPMSlider extends React.Component {
                     background: sliderColor
                 }}
             />
-            {/*<Nouislider*/}
-            {/*start={this.props.bpm}*/}
-            {/*connect={[true, false]}*/}
-            {/*step={1}*/}
-            {/*orientation="horizontal"*/}
-            {/*range={{*/}
-            {/*    min: 50,*/}
-            {/*    max: 130*/}
-            {/*}}*/}
-            {/*className="bpm-slider"*/}
-            {/*onUpdate={this.props.updateBPM()}*/}
-            {/*/>*/}
-            <p className="bpm-text">{this.props.bpm}</p>
+            <p css={bpmTextStyle}>{this.props.bpm}</p>
         </div>
     }
 

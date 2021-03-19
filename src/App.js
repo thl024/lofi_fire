@@ -10,7 +10,7 @@ function App() {
   // Instrument selection + Piano roll section
   return (
     <div className="App">
-        <h2 className={"title"}>Musebox</h2>
+        <h2 className={"title"}>Muselab</h2>
         {/*<NavBar />*/}
         {/*<br />*/}
         {/*<br />*/}
