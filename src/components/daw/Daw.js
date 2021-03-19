@@ -1,9 +1,9 @@
 import React from 'react';
 import {ControlBar} from "./control_bar/ControlBar";
 import {InstrumentPicker} from "./instrument_picker/InstrumentPicker";
-import {PianoRoll} from "./piano_roll/PianoRoll";
+import {PianoRoll} from "./PianoRoll";
 import {AudioController} from "../../audio/AudioController";
-import {instrumentMappings} from "./InstrumentMappings";
+import {instrumentMappings} from "../../utils/InstrumentMappings";
 import { v4 as uuidv4 } from 'uuid';
 import './Daw.css';
 
@@ -53,6 +53,9 @@ export class Daw extends React.Component {
         this.state = initialState;
         this.instrumentMappings = instrumentMappings;
         this.audioController = new AudioController(ALL_KEYS);
+
+        this.minimumBPM = 50;
+        this.maximumBPM = 140;
 
         // Bindings
         this.onSelectInstrument = this.onSelectInstrument.bind(this);
@@ -237,6 +240,8 @@ export class Daw extends React.Component {
             <ControlBar
                 className={"controlBar"}
                 updateBPM={this.updateBPM}
+                minimumBPM={this.minimumBPM}
+                maximumBPM={this.maximumBPM}
                 bpm={this.state.bpm}
                 play={this.play}
                 stop={this.stop}

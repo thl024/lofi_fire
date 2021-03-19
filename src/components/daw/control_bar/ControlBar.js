@@ -40,7 +40,9 @@ export class ControlBar extends React.Component {
            </div>
            <div css={playbackSliderWrapperStyle}>
                <BPMSlider updateBPM={this.props.updateBPM}
-                          bpm={this.props.bpm} />
+                          bpm={this.props.bpm}
+                          minimumBPM={this.props.minimumBPM}
+                          maximumBPM={this.props.maximumBPM}/>
            </div>
            <div css={playbackButtonWrapperStyle}>
                <Button color="#757575" hoverColor="#BDBDBD" icon="refresh" onClick={this.props.refresh} />

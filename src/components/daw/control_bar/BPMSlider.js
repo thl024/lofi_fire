@@ -33,8 +33,8 @@ export class BPMSlider extends React.Component {
             <Slider
                 css={bpmSliderStyle}
                 defaultValue={this.props.bpm}
-                min={50}
-                max={130}
+                min={this.props.minimumBPM}
+                max={this.props.maximumBPM}
                 step={1}
                 onChange={this.props.updateBPM()}
                 handleStyle={{
