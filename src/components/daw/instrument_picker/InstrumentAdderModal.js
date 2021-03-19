@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal} from "@material-ui/core";
 
-export class InstrumentAdder extends React.Component {
+export class InstrumentAdderModal extends React.Component {
 
     constructor(props) {
         super(props);

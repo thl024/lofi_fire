@@ -1,7 +1,7 @@
 import React from 'react';
 import './InstrumentPicker.css'
 import {InstrumentPickerRow} from "./InstrumentPickerRow";
-import {InstrumentAdder} from "./InstrumentAdder";
+import {InstrumentAdderModal} from "./InstrumentAdderModal";
 
 export class InstrumentPicker extends React.Component {
 
@@ -67,7 +67,7 @@ export class InstrumentPicker extends React.Component {
                         })}
                     </div>
                 </ul>
-            <InstrumentAdder open={this.state.modalOpen} onClose={this.onCloseAddInstrumentModal} />
+            <InstrumentAdderModal open={this.state.modalOpen} onClose={this.onCloseAddInstrumentModal} />
         </div>
     }
 

@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import React from 'react';
 import {BPMSlider} from "./BPMSlider";
-import {Button} from "./Button";
+import {Button} from "../common/Button";
 import { jsx, css } from '@emotion/react'
 
 const playbackButtonWrapperStyle = css`
