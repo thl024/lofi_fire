@@ -2,11 +2,20 @@ import React from 'react';
 import './InstrumentPicker.css'
 import {InstrumentPickerRow} from "./InstrumentPickerRow";
 import {InstrumentAdderModal} from "./InstrumentAdderModal";
+import {connect} from "react-redux";
+import {refreshInstrument, selectInstrument} from "../../../redux/actions";
 
-export class InstrumentPicker extends React.Component {
+class InstrumentPicker extends React.Component {
+
+    // Updates the BPM
+    addNewInstrument = () => (value) => {
+        // Notify global instance
+        this.props.changeBPM(value)
+    };
 
     constructor(props) {
         super(props);
+
         this.onEditInstrument = this.onEditInstrument.bind(this);
         this.onDeleteInstrument = this.onDeleteInstrument.bind(this);
         this.onOpenAddInstrumentModal = this.onOpenAddInstrumentModal.bind(this);
@@ -22,6 +31,9 @@ export class InstrumentPicker extends React.Component {
                 "modalOpen": true
             }
         })
+
+        // TODO based on results, call back on
+        // this.props.onCreateInstrument which will refer to main controller
     }
 
     onCloseAddInstrumentModal() {
@@ -33,15 +45,16 @@ export class InstrumentPicker extends React.Component {
     }
 
     onEditInstrument(index) {
-
+        // TODO may need to open modal
+        // TODO may need to call back on a prop named this.props.onEditInstrument, as may need to load new audio library
     }
 
     onDeleteInstrument(index) {
-        console.log("Delete")
-        console.log(index)
+
     }
 
     render() {
+        console.log("Rerender Instrument List");
         return <div className="instrument-picker-wrapper">
                 <ul className="instrument-list">
                     <div className="instrument-picker-header">
@@ -52,16 +65,15 @@ export class InstrumentPicker extends React.Component {
                         </button>
                     </div>
                     <div className="scroll-area">
-                        {this.props.instruments.map((instrument, index, _) => {
+                        {this.props.names.map((name, index, _) => {
                             const selected = index === this.props.selectedIndex;
                             return <InstrumentPickerRow index={index}
-                                                        instrument={instrument.name}
-                                                        color={instrument.color}
-                                                        // TODO -- Pass in from DAW?
-                                                        onRefresh={this.props.onRefreshInstrument}
+                                                        instrument={name}
+                                                        color={this.props.colors[index]}
+                                                        onRefresh={this.props.refreshInstrument}
                                                         onEdit={this.onEditInstrument}
                                                         onDelete={this.onDeleteInstrument}
-                                                        onSelect={this.props.onSelectInstrument}
+                                                        onSelect={this.props.selectInstrument}
                                                         key={index}
                                                         selected={selected} />
                         })}
@@ -70,5 +82,18 @@ export class InstrumentPicker extends React.Component {
             <InstrumentAdderModal open={this.state.modalOpen} onClose={this.onCloseAddInstrumentModal} />
         </div>
     }
-
 }
+
+// Redux connection
+export default connect(
+    (state) => {
+        return {
+            names: state.names,
+            colors: state.colors,
+            selectedIndex: state.selectedIndex
+        }},
+    (dispatch) => ({
+        selectInstrument: (index) => dispatch(selectInstrument(index)),
+        refreshInstrument: (index) => dispatch(refreshInstrument(index))
+    })
+)(InstrumentPicker)

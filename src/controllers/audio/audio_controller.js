@@ -1,10 +1,10 @@
-const {AudioPlayer} = require("./AudioPlayer");
+const {Audio_player} = require("./audio_player");
 
 // Interfaces between instrument data and audio player
 export class AudioController {
 
     constructor(allNotes) {
-        this.audioPlayer = new AudioPlayer();
+        this.audioPlayer = new Audio_player();
         this.allNotes = allNotes;
     }
 
@@ -17,13 +17,13 @@ export class AudioController {
         this.audioPlayer.unloadSoundLibrary(instrument.id)
     }
 
-    playSingleNote(instrument, index) {
-        this.audioPlayer.playSample(instrument.id, this.allNotes[index])
+    playSingleNote(id, index) {
+        this.audioPlayer.playSample(id, this.allNotes[index])
     }
 
-    play(bpm, instruments, callback) {
+    play(bpm, ids, data, callback) {
         let delay = this.delayPerBeat(bpm);
-        let sequence = this.retrieveSequence(instruments);
+        let sequence = this.retrieveSequence(ids, data);
 
         this.audioPlayer.playSampleSequence(delay, sequence, callback)
     }
@@ -33,17 +33,17 @@ export class AudioController {
     }
 
     // Converts index based mappings to named notes
-    retrieveSequence(instruments){
+    retrieveSequence(ids, data){
         const playedIndices = [];
 
         // For each col (time axis)
-        for (let j = 0; j < instruments[0].data[0].length; j++) {
+        for (let j = 0; j < data[0][0].length; j++) {
             let timeIndices = {};
 
             // For each instrument (instrument axis)
-            for (let index = 0; index < instruments.length; index++){
+            for (let index = 0; index < ids.length; index++){
 
-                const m = instruments[index].data;
+                const m = data[index];
                 let indices = []
 
                 // For each row (note axis)
@@ -52,7 +52,7 @@ export class AudioController {
                         indices.push(this.allNotes[i]);
                     }
                 }
-                timeIndices[instruments[index].id] = indices;
+                timeIndices[ids[index]] = indices;
             }
             playedIndices.push(timeIndices);
         }
@@ -66,3 +66,6 @@ export class AudioController {
         return (60/bpm)/4 * 1000
     }
 }
+
+// TODO redux to get bpm live (and set audio player state)
+// TODO -- AUDIO PLAYER SHOULD BE STATEFUL!!!!!!!!!!, AND THIS WOULD ALLOW PLAYBACK TO CHANGE W/ BPM AND DATA UPDATES LIVE!

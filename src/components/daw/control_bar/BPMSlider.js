@@ -4,6 +4,9 @@ import React from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css'
 import { jsx, css } from '@emotion/react'
+import { connect } from 'react-redux'
+import {changeBPM} from "../../../redux/actions";
+import {MAXIMUM_BPM, MINIMUM_BPM} from "../../../utils/constants";
 
 // CSS
 const sliderDivStyle = css`
@@ -24,8 +27,17 @@ const bpmSliderStyle = css`
   width: 50%;
 `
 
-export class BPMSlider extends React.Component {
+class BPMSlider extends React.Component {
+
+    // Updates the BPM
+    updateBPM = () => (value) => {
+        // Notify global instance
+        this.props.changeBPM(value)
+    };
+
     render() {
+        console.log("Rerender BPM Bar");
+
         // Slider color
         let sliderColor = "#FF9800"
         return <div css={sliderDivStyle}>
@@ -33,10 +45,10 @@ export class BPMSlider extends React.Component {
             <Slider
                 css={bpmSliderStyle}
                 defaultValue={this.props.bpm}
-                min={this.props.minimumBPM}
-                max={this.props.maximumBPM}
+                min={MINIMUM_BPM}
+                max={MAXIMUM_BPM}
                 step={1}
-                onChange={this.props.updateBPM()}
+                onChange={this.updateBPM()}
                 handleStyle={{
                     background: sliderColor,
                 }}
@@ -55,3 +67,9 @@ export class BPMSlider extends React.Component {
     }
 
 }
+
+// Redux connection
+export default connect(
+    (state) => { return {bpm: state.bpm} },
+    { changeBPM }
+)(BPMSlider)

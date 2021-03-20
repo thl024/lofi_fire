@@ -1,6 +1,8 @@
 import {Howl} from 'howler';
 
-export class AudioPlayer {
+// TODO make this stateful, create a "RunTime" struct that has all of the details needed for running during playback
+// runtime struct will update dynamically allowing for playback to change as variables change (like notes or bpm)
+export class Audio_player {
 
     constructor() {
         this.preloadedAudio = {};

@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import React from 'react';
-import {BPMSlider} from "./BPMSlider";
+import BPMSlider from "./BPMSlider";
 import {Button} from "../common/Button";
 import { jsx, css } from '@emotion/react'
 
@@ -33,16 +33,15 @@ const playbackWrapperStyle = css`
 
 export class ControlBar extends React.Component {
     render() {
+        console.log("Rerender Control Bar");
+
         return <div css={playbackWrapperStyle}>
            <div css={playbackButtonWrapperStyle}>
                <Button color="#FF9800" hoverColor="#FFE0B2" icon="play_arrow" onClick={this.props.play} />
                <Button color="#F44336" hoverColor="#FA8072" icon="stop" onClick={this.props.stop} />
            </div>
            <div css={playbackSliderWrapperStyle}>
-               <BPMSlider updateBPM={this.props.updateBPM}
-                          bpm={this.props.bpm}
-                          minimumBPM={this.props.minimumBPM}
-                          maximumBPM={this.props.maximumBPM}/>
+               <BPMSlider/>
            </div>
            <div css={playbackButtonWrapperStyle}>
                <Button color="#757575" hoverColor="#BDBDBD" icon="refresh" onClick={this.props.refresh} />
