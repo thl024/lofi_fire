@@ -55,6 +55,7 @@ class InstrumentPicker extends React.Component {
 
     render() {
         console.log("Rerender Instrument List");
+
         return <div className="instrument-picker-wrapper">
                 <ul className="instrument-list">
                     <div className="instrument-picker-header">
@@ -66,6 +67,10 @@ class InstrumentPicker extends React.Component {
                     </div>
                     <div className="scroll-area">
                         {this.props.names.map((name, index, _) => {
+
+                            // TODO -- keep count of ids in instrument picker to know how many rows
+                            // BUT TO REDUCE LATENCY ON CHANGING INSTRUMENT AND OR COLORS, HAVE THE ROWS
+                            // DIRECTLY HOOKED UP TO REDUX, INSTEAD OF PASSING IT THROUGH HERE
                             const selected = index === this.props.selectedIndex;
                             return <InstrumentPickerRow index={index}
                                                         instrument={name}

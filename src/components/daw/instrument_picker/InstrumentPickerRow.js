@@ -53,5 +53,4 @@ export class InstrumentPickerRow extends React.Component {
             <Button color="#757575" hoverColor="#BDBDBD" icon="delete" onClick={this.onDeleteWithIndex} />
         </div>
     }
-
 }
