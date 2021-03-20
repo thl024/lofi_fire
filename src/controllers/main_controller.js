@@ -65,10 +65,12 @@ export class MainController {
         // Play is an asynchronous operation, require callback to retrieve tick information
         const state = store.getState();
 
+        store.dispatch(onPlayBeat(-1));
+
         // TODO -- should be no need to pass in state vars, audio controller should have them
         this.audioController.play(state.bpm, state.ids, state.data, (index) => {
             // Callback called on every tick, set play index
-            store.dispatch(onPlayBeat(index))
+            store.dispatch(onPlayBeat(index));
         });
     }
 

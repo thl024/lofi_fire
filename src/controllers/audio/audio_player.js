@@ -104,15 +104,14 @@ export class Audio_player {
             tempSequence = [...fullSequence];
         }
 
+        // Notify that one tick has passed
+        callback(fullSequence.length - tempSequence.length);
+
         const notes = tempSequence[0];
         this.playGroup(notes)
 
         this.currentTimer = setTimeout(() => {
             tempSequence.shift()
-
-            // Notify that one tick has passed
-            callback(fullSequence.length - tempSequence.length);
-
             this.recursivePlay(fullSequence, tempSequence, delay, callback)
         }, delay)
     }

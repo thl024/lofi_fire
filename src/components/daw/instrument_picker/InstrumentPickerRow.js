@@ -16,25 +16,22 @@ export class InstrumentPickerRow extends React.Component {
     }
 
     onSelectWithFilter(event) {
-        event.preventDefault();
-        console.log(event);
-        // Prevent parent target from firing when child target has been selected
-        // TODO fix bug; text is a child too but it is not firing!
-        if(event.target === event.currentTarget) {
-            this.props.onSelect(this.props.index)
-        }
+        this.props.onSelect(this.props.index)
     }
 
-    onRefreshWithIndex() {
+    onRefreshWithIndex(e) {
+        e.stopPropagation();
         this.props.onRefresh(this.props.index);
     }
 
-    onEditModalPopup() {
+    onEditModalPopup(e) {
         // TODO show modal
         // TODO on modal finish call this.props.onEdit(this.props.index);
+        e.stopPropagation();
     }
 
-    onDeleteWithIndex() {
+    onDeleteWithIndex(e) {
+        e.stopPropagation();
         this.props.onDelete(this.props.index);
     }
 

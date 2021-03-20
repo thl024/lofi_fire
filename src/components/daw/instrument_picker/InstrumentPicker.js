@@ -10,7 +10,7 @@ class InstrumentPicker extends React.Component {
     // Updates the BPM
     addNewInstrument = () => (value) => {
         // Notify global instance
-        this.props.changeBPM(value)
+
     };
 
     constructor(props) {
