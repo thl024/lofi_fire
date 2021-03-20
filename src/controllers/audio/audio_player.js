@@ -75,8 +75,8 @@ export class Audio_player {
     }
 
     unloadSoundLibrary(id) {
-        this.preloadedAudio.delete(id);
-        this.typeMap.delete(id);
+        delete this.preloadedAudio[id];
+        delete this.typeMap[id];
     }
 
     playSample(id, note) {

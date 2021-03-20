@@ -24,6 +24,17 @@ class PianoRollItem extends React.Component {
                 nextProps.data[this.props.j][this.props.i]) {
                 return true;
             }
+
+            // color changes
+            if (this.props.data[this.props.j][this.props.i] || nextProps.data[this.props.j][this.props.i] &&
+                this.props.color !== nextProps.color) {
+                return true;
+            }
+
+        } else {
+            if (this.props.data !== null) {
+                return true;
+            }
         }
 
         return false;
@@ -76,7 +87,7 @@ class PianoRollItem extends React.Component {
 export default connect(
     (state) => {
         return {
-            data: state.data[state.selectedIndex],
+            data: state.data.length > 0 ? state.data[state.selectedIndex] : null,
             color: state.colors[state.selectedIndex]
         }},
     (dispatch) => ({

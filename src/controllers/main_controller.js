@@ -93,6 +93,11 @@ export class MainController {
     }
 
     refresh() {
+        let state = store.getState();
+        state.names.forEach((name => {
+            this.audioController.unloadInstrument(name)
+        }))
+
         this.clear();
 
         // Initial instrument seed
