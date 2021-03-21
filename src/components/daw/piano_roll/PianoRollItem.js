@@ -42,10 +42,7 @@ class PianoRollItem extends React.Component {
 
     togglePianoRollNote(i, j) {
         // Notify parent for it to float to main controller
-        // Only play note if the item was toggled on
-        if (!this.props.data[i][j]) {
-            this.props.playNote(i);
-        }
+        this.props.notifyNote(i, j);
 
         // Notify redux
         this.props.onTogglePianoRollNote(i, j);

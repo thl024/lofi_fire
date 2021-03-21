@@ -31,7 +31,10 @@ class BPMSlider extends React.Component {
 
     // Updates the BPM
     updateBPM = () => (value) => {
-        // Notify global instance
+        // Notify parent so that it may float up to audio controller
+        this.props.updateBPM(value);
+
+        // Notify redux
         this.props.changeBPM(value)
     };
 

@@ -2,12 +2,18 @@ import {Howl} from 'howler';
 
 // TODO make this stateful, create a "RunTime" struct that has all of the details needed for running during playback
 // runtime struct will update dynamically allowing for playback to change as variables change (like notes or bpm)
-export class Audio_player {
+export class AudioPlayer {
 
     constructor() {
         this.preloadedAudio = {};
         this.typeMap = {};
-        this.currentTimer = null;
+
+        // Play state contains currentTimer, current delay, and current sequence
+        this.playState = {
+            currentTimer: null,
+            delay: -1,
+            sequence: null
+        };
     }
 
     // Loads all named notes for a particular instrument
@@ -20,6 +26,7 @@ export class Audio_player {
         switch (instType) {
             case "toned": this.loadNotedSoundLibrary(id,  src, fileType, notes, callback); break;
             case "perc": this.loadPercSoundLibrary(id, src, fileType, callback); break;
+            default: callback(new Error("Unrecognized instrument type"));
         }
     }
 
@@ -79,6 +86,20 @@ export class Audio_player {
         delete this.typeMap[id];
     }
 
+    updatePlayState(sequence, delay) {
+        if (sequence !== null) {
+            this.playState.sequence = sequence;
+        }
+
+        if (delay !== -1) {
+            this.playState.delay = delay;
+        }
+    }
+
+    isPlaying() {
+        return this.playState.currentTimer !== null
+    }
+
     playSample(id, note) {
         let sample;
         if (this.typeMap[id] === "perc") {
@@ -89,32 +110,44 @@ export class Audio_player {
         sample.play();
     }
 
-    playSampleSequence(delay, sequence, callback) {
-        if (this.currentTimer) {
+    playSampleSequence(callback) {
+        if (this.playState.currentTimer) {
             this.stop();
         }
 
         // Play forever until user stops (ending current timer)
-        this.recursivePlay([...sequence], sequence, delay, callback);
+        this.recursivePlay(0, callback);
     }
 
-    recursivePlay(fullSequence, tempSequence, delay, callback) {
-        if (tempSequence.length === 0) {
-            // Repeat sequence
-            tempSequence = [...fullSequence];
-        }
+    recursivePlay(index, callback) {
+        callback(index);
+        this.playGroup(this.playState.sequence[index]);
 
-        // Notify that one tick has passed
-        callback(fullSequence.length - tempSequence.length);
-
-        const notes = tempSequence[0];
-        this.playGroup(notes)
-
-        this.currentTimer = setTimeout(() => {
-            tempSequence.shift()
-            this.recursivePlay(fullSequence, tempSequence, delay, callback)
-        }, delay)
+        this.playState.currentTimer = setTimeout(() => {
+            let newIndex = (index + 1) % this.playState.sequence.length
+            this.recursivePlay(newIndex, callback)
+        }, this.playState.delay);
     }
+
+
+
+    // recursivePlay(fullSequence, tempSequence, delay, callback) {
+    //     if (tempSequence.length === 0) {
+    //         // Repeat sequence
+    //         tempSequence = [...fullSequence];
+    //     }
+    //
+    //     // Notify that one tick has passed
+    //     callback(fullSequence.length - tempSequence.length);
+    //
+    //     const notes = tempSequence[0];
+    //     this.playGroup(notes)
+    //
+    //     this.currentTimer = setTimeout(() => {
+    //         tempSequence.shift()
+    //         this.recursivePlay(fullSequence, tempSequence, delay, callback)
+    //     }, delay)
+    // }
 
     playGroup(indices) {
         for (const [id, notes] of Object.entries(indices)) {
@@ -123,8 +156,8 @@ export class Audio_player {
     }
 
     stop() {
-        if (this.currentTimer) {
-            clearTimeout(this.currentTimer)
+        if (this.playState.currentTimer) {
+            clearTimeout(this.playState.currentTimer)
             this.currentTimer = null;
         }
 

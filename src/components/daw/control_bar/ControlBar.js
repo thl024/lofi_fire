@@ -41,7 +41,7 @@ export class ControlBar extends React.Component {
                <Button color="#F44336" hoverColor="#FA8072" icon="stop" onClick={this.props.stop} />
            </div>
            <div css={playbackSliderWrapperStyle}>
-               <BPMSlider/>
+               <BPMSlider updateBPM={this.props.updateBPM}/>
            </div>
            <div css={playbackButtonWrapperStyle}>
                <Button color="#757575" hoverColor="#BDBDBD" icon="refresh" onClick={this.props.refresh} />

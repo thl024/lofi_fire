@@ -41,7 +41,7 @@ export class PianoRoll extends React.Component {
         for (let j = 0; j < ALL_KEYS.length; j++) {
             let new_row = []
             for (let i = 0; i < NUM_MEASURES*4; i++) {
-                new_row.push(<PianoRollItem j={j} i={i} playNote={this.props.playNote} />)
+                new_row.push(<PianoRollItem j={j} i={i} notifyNote={this.props.notifyNote} />)
             }
             rows.push(<div css={pianoRollRowWrapperStyle} key={j.toString()} >
                 {new_row}

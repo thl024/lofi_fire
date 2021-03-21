@@ -26,12 +26,13 @@ export class Daw extends React.Component {
     render() {
         let pianoRollSection = <div className="playlist-wrapper">
             <InstrumentPicker onCreateInstrument={this.controller.onCreateInstrument} />
-            <PianoRoll playNote={this.controller.playSingleNote} />
+            <PianoRoll notifyNote={this.controller.notifySingleNote} />
         </div>
 
         return <div className={"mainApp"} >
             <ControlBar
                 className={"controlBar"}
+                updateBPM={this.controller.updateBPM}
                 play={this.controller.play}
                 stop={this.controller.stop}
                 refresh={this.controller.refresh}

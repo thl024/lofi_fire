@@ -1,11 +1,13 @@
-const {Audio_player} = require("./audio_player");
+const {AudioPlayer} = require("./audio_player");
 
 // Interfaces between instrument data and audio player
 export class AudioController {
 
     constructor(allNotes) {
-        this.audioPlayer = new Audio_player();
+        this.audioPlayer = new AudioPlayer();
         this.allNotes = allNotes;
+
+        this.updateBPM = this.updateBPM.bind(this);
     }
 
     loadInstrument(instrument, callback) {
@@ -21,11 +23,28 @@ export class AudioController {
         this.audioPlayer.playSample(id, this.allNotes[index])
     }
 
+    notifyNoteChanged(id, noteIndex, timeIndex) {
+        let note = this.allNotes[noteIndex];
+
+        if (this.audioPlayer.isPlaying()) {
+            let currSequence = this.audioPlayer.playState.sequence;
+
+            let notes = currSequence[timeIndex][id];
+            if (notes.includes(note)) {
+                let index = notes.indexOf(note);
+                notes.splice(index, 1);
+            } else {
+                notes.push(note);
+            }
+        }
+    }
+
     play(bpm, ids, data, callback) {
         let delay = this.delayPerBeat(bpm);
         let sequence = this.retrieveSequence(ids, data);
 
-        this.audioPlayer.playSampleSequence(delay, sequence, callback)
+        this.audioPlayer.updatePlayState(sequence, delay);
+        this.audioPlayer.playSampleSequence(callback);
     }
 
     stop() {
@@ -33,6 +52,9 @@ export class AudioController {
     }
 
     // Converts index based mappings to named notes
+    // Constantly retrieving sequence will be extremely expensive
+    // We do not want audio controller to dynamically retrieve updates from data via redux
+    // Instead we can just use the notifyNoteAdded func which gets triggered from the piano roll items
     retrieveSequence(ids, data){
         const playedIndices = [];
 
@@ -59,6 +81,12 @@ export class AudioController {
         return playedIndices;
     }
 
+    updateBPM(bpm) {
+        if (this.audioPlayer.currentTimer !== null) {
+            this.audioPlayer.updatePlayState(null, this.delayPerBeat(bpm));
+        }
+    }
+
     // BPM = Beats per minute
     // 100 BPM = 100 Beats per 60 seconds = 60/100 = 0.6 seconds delay per beat = 0.6/4 = 0.15 seconds delay per
     // 16th note
@@ -66,6 +94,8 @@ export class AudioController {
         return (60/bpm)/4 * 1000
     }
 }
+
+
 
 // TODO redux to get bpm live (and set audio player state)
 // TODO -- AUDIO PLAYER SHOULD BE STATEFUL!!!!!!!!!!, AND THIS WOULD ALLOW PLAYBACK TO CHANGE W/ BPM AND DATA UPDATES LIVE!

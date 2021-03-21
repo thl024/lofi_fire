@@ -17,11 +17,9 @@ export class MainController {
         this.stop = this.stop.bind(this);
         this.refresh = this.refresh.bind(this);
         this.export = this.export.bind(this);
-        this.playSingleNote = this.playSingleNote.bind(this);
 
-        store.subscribe(() => {
-            // let pianoNoteHit = store.getState().instruments;
-        })
+        this.updateBPM = this.audioController.updateBPM;
+        this.notifySingleNote = this.notifySingleNote.bind(this);
     }
 
     seedInitialInstruments() {
@@ -55,9 +53,17 @@ export class MainController {
         });
     }
 
-    playSingleNote(i) {
+    notifySingleNote(noteIndex, timeIndex) {
         const state = store.getState();
-        this.audioController.playSingleNote(state.ids[state.selectedIndex], i)
+        const data = state.data[state.selectedIndex];
+        const id = state.ids[state.selectedIndex];
+        // Play single note if turned on
+        if (!data[noteIndex][timeIndex]) {
+            this.audioController.playSingleNote(id, noteIndex)
+        }
+
+        // Notify audio controller that a new note has been added, so that it may update audio player w/ new data
+        this.audioController.notifyNoteChanged(id, noteIndex, timeIndex);
     }
 
     // TODO think about just using audio controller for the playback stuff
@@ -99,5 +105,4 @@ export class MainController {
     export() {
         // TODO
     }
-
 }
