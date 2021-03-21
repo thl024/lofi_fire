@@ -26,7 +26,7 @@ class PianoRollItem extends React.Component {
             }
 
             // color changes
-            if (this.props.data[this.props.j][this.props.i] || nextProps.data[this.props.j][this.props.i] &&
+            if ((this.props.data[this.props.j][this.props.i] || nextProps.data[this.props.j][this.props.i]) &&
                 this.props.color !== nextProps.color) {
                 return true;
             }
@@ -42,7 +42,10 @@ class PianoRollItem extends React.Component {
 
     togglePianoRollNote(i, j) {
         // Notify parent for it to float to main controller
-        this.props.playNote(i);
+        // Only play note if the item was toggled on
+        if (!this.props.data[i][j]) {
+            this.props.playNote(i);
+        }
 
         // Notify redux
         this.props.onTogglePianoRollNote(i, j);

@@ -76,15 +76,7 @@ export class MainController {
 
     stop() {
         this.audioController.stop();
-        store.dispatch(onPlayBeat(-1))
-
-        // TODO dispatch play index update
-        // this.setState((state) => {
-        //     return {
-        //         ...state,
-        //         playIndex: -1
-        //     }
-        // });
+        store.dispatch(onPlayBeat(-1));
     }
 
     clear() {
@@ -96,7 +88,7 @@ export class MainController {
         let state = store.getState();
         state.names.forEach((name => {
             this.audioController.unloadInstrument(name)
-        }))
+        }));
 
         this.clear();
 

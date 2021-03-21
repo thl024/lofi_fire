@@ -3,6 +3,7 @@
 import React from 'react';
 import { jsx, css } from '@emotion/react'
 import {connect} from "react-redux";
+import {NUM_MEASURES} from "../../../utils/constants";
 
 const pianoRollRowHeaderTextStyle = css`
   color: #FFFFFF;
@@ -17,7 +18,8 @@ class PianoRollHeaderCell extends React.Component {
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         return nextProps.playIndex === -1 || // Lazy, just rerender all header cells when stop is called
             nextProps.playIndex === this.props.i || // Current cell is on the tick; add styling
-            nextProps.playIndex === this.props.i+1; // Update previous cell to remove styling
+            nextProps.playIndex === this.props.i+1 || // Update previous cell to remove styling
+            (nextProps.playIndex === 0 && this.props.i === NUM_MEASURES * 4 - 1); // Update last cell when looping
     }
 
     render() {
