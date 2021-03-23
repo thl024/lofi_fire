@@ -2,11 +2,25 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/react'
-import './InstrumentPickerRow.css'
 import {IconCircleButton} from "../common/IconCircleButton";
 import {InstrumentModal} from "./InstrumentModal";
 import EditIcon from '@material-ui/icons/Edit';
-import {NUM_MEASURES} from "../../../utils/constants";
+
+const instrumentRowWrapperStyle = css`
+  /*flex-basis: 100px*/
+  height: 50px;
+  border-bottom: #BDBDBD 1px solid;
+  cursor: pointer;
+
+  /* Flexbox */
+  display: flex;
+  flex-direction: row;
+`
+
+const instrumentTextStyle = css`
+  /*  Flexbox  */
+  flex-grow: 10;
+`
 
 export class InstrumentPickerRow extends React.Component {
 
@@ -75,17 +89,15 @@ export class InstrumentPickerRow extends React.Component {
 
     render() {
         console.log("Rerender Instrument List Row: " + this.props.index)
-        let instrumentRowClasses = "instrument-row-wrapper";
         let instrumentText = this.props.instrument
-
         // TODO more elegant way to indicate selected row
         if (this.props.selected) {
             instrumentText = "> " + this.props.instrument
         }
 
         return <div style={{backgroundColor: this.props.color}}
-                    className={instrumentRowClasses} onClick={this.onSelectWithFilter}>
-            <p className="instrument-text">{instrumentText}</p>
+                    css={instrumentRowWrapperStyle} onClick={this.onSelectWithFilter}>
+            <p css={instrumentTextStyle}>{instrumentText}</p>
             <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="refresh" onClick={this.onRefreshWithIndex} />
             <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="edit" onClick={this.onEditModalPopup} />
             <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="delete" onClick={this.onDeleteWithIndex} />

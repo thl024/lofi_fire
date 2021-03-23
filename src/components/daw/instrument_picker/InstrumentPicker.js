@@ -1,5 +1,7 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
 import React from 'react';
-import './InstrumentPicker.css'
+import { jsx, css } from '@emotion/react'
 import {InstrumentPickerRow} from "./InstrumentPickerRow";
 import {connect} from "react-redux";
 import {
@@ -9,6 +11,39 @@ import {
 import {InstrumentModal} from "./InstrumentModal";
 import {instrument_mappings} from "../../../utils/instrument_mappings";
 import AddIcon from "@material-ui/icons/Add";
+import {InstrumentPickerHeader} from "./InstrumentPickerHeader";
+
+const instrumentPickerWrapperStyle = css`
+  flex-grow: 0.5;
+  
+  border-bottom: solid 2px #757575;
+  border-top: solid 2px #757575;
+
+  /* Flexbox */
+  display:flex;
+  flex-basis: 300px;
+  flex-direction: column;
+`
+
+const instrumentListStyle = css`
+  margin:0;
+  padding:0 !important;
+  height: 100%;
+
+  /* Flexbox */
+  display: flex;
+  flex-direction: column;
+`
+
+const scrollAreaStyle = css`
+  /*height: 480px;*/
+  overflow: scroll;
+  white-space: nowrap;
+  /*flex-grow: 3;*/
+
+  flex-grow: 1;
+  overflow-x: hidden;
+`
 
 class InstrumentPicker extends React.Component {
 
@@ -42,21 +77,11 @@ class InstrumentPicker extends React.Component {
     render() {
         console.log("Rerender Instrument List");
 
-        return <div className="instrument-picker-wrapper">
-                <ul className="instrument-list">
-                    <div className="instrument-picker-header">
-                        <li className="instrument-picker-header-text">Instruments</li>
-                        <button className="btn-floating btn-large waves-effect waves-light add-button"
-                                onClick={() => this.openAddModal(true)}>
-                            <i className="material-icons">add</i>
-                        </button>
-                    </div>
-                    <div className="scroll-area">
+        return <div css={instrumentPickerWrapperStyle}>
+                <ul css={instrumentListStyle}>
+                    <InstrumentPickerHeader openAddModal={this.openAddModal}/>
+                    <div css={scrollAreaStyle}>
                         {this.props.names.map((name, index, _) => {
-
-                            // TODO -- keep count of ids in instrument picker to know how many rows
-                            // BUT TO REDUCE LATENCY ON CHANGING INSTRUMENT AND OR COLORS, HAVE THE ROWS
-                            // DIRECTLY HOOKED UP TO REDUX, INSTEAD OF PASSING IT THROUGH HERE
                             const selected = index === this.props.selectedIndex;
                             return <InstrumentPickerRow index={index}
                                                         instrument={name}
@@ -71,7 +96,6 @@ class InstrumentPicker extends React.Component {
                     </div>
                 </ul>
 
-            {/* TODO -- figure out a way to render this without re-rendering all instruments*/}
             <InstrumentModal
                 open={this.state.addModalOpen}
                 onClose={this.closeAddModal}

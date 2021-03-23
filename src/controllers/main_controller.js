@@ -4,7 +4,7 @@ import {ALL_KEYS, defaultColorChoices} from "../utils/constants";
 import {instrument_mappings} from "../utils/instrument_mappings";
 import {v4 as uuidv4} from "uuid";
 import {initializeEmptyData} from "../utils/utils";
-import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset} from "../redux/actions";
+import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset, selectInstrument} from "../redux/actions";
 import {store} from "../redux/stores"
 
 export class MainController {
@@ -90,7 +90,16 @@ export class MainController {
             return;
         }
 
+        // Quit audio before deleting an instrument
+        this.audioController.stop();
         this.audioController.unloadInstrument(state.ids[index]);
+
+        // Fix indices
+        if (state.selectedIndex === index) {
+            if (index !== 0) {
+                store.dispatch(selectInstrument(index - 1));
+            }
+        }
         store.dispatch(deleteInstrument(index))
     }
 
