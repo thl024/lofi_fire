@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import React from 'react';
 import {jsx, css} from '@emotion/react'
-import {Modal} from "@material-ui/core";
+import {Modal, Step, StepLabel, Stepper} from "@material-ui/core";
 import {instrument_mappings} from "../../../instrument_mappings";
 import {TextButton} from "../common/TextButton";
 import {addColor, addColorHighlight, closeColor, closeColorHighlight,} from "../../../themes/colors";
@@ -10,10 +10,13 @@ import {SelectValuePage} from "../form_page/SelectValuePage";
 import {SelectColorPage} from "../form_page/SelectColorPage";
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import CloseIcon from '@material-ui/icons/Close';
+import {ArrowRightAlt} from "@material-ui/icons";
 
 const modalTitleStyle = css`
   text-align: center;
   font-size: 3.5vw;
+
+  flex-shrink: 1;
 `
 
 const modalStyle = css`
@@ -25,21 +28,33 @@ const modalStyle = css`
 const modalBodyStyle=css`
   background-color: #FFFFFF;
   padding: 2% 5% 0 5%;
-  width: 50%;
-  height: 50%;
+  width: 60%;
+  height: 60%;
   border-radius: 25px;
+  
+  // Flexbox
+  display: flex;
+  flex-direction: column;
 `
 
 const formStyle=css`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+
+  flex-basis: 200px;
 `
 
 const buttonWrapperStyle=css`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+
+  flex-shrink: 1;
+`
+
+const stepperStyle = css`
+  flex-shrink: 1;
 `
 
 export class InstrumentModal extends React.Component {
@@ -81,7 +96,7 @@ export class InstrumentModal extends React.Component {
                 this.setState((state) => {
                     return {
                         ...state,
-                        color: val.hex
+                        instrument: val.target.value
                     }
                 })
                 break;
@@ -89,7 +104,7 @@ export class InstrumentModal extends React.Component {
                 this.setState((state) => {
                     return {
                         ...state,
-                        instrument: val.target.value
+                        color: val.hex
                     }
                 })
                 break;
@@ -193,9 +208,6 @@ export class InstrumentModal extends React.Component {
                     title="Instrument Type" />
                 break;
             case 1:
-                page = <SelectColorPage color={this.state.color} onValueSelected={this.onValueSelected} />
-                break;
-            case 2:
                 let instruments = this.getInstrumentsWithType(this.state.type);
                 page = <SelectValuePage
                     onValueSelected={this.onValueSelected}
@@ -204,7 +216,10 @@ export class InstrumentModal extends React.Component {
                     titles={instruments}
                     helperText="Select an instrument"
                     title="Instrument" />
-                    break;
+                break;
+            case 2:
+                page = <SelectColorPage color={this.state.color} onValueSelected={this.onValueSelected} />
+                break;
             default:
                 page = <p>error</p>
         }
@@ -212,14 +227,26 @@ export class InstrumentModal extends React.Component {
         const body = (
             <div css={modalBodyStyle}>
                 <h2 css={modalTitleStyle}>{this.props.action + " Instrument"}</h2>
-                <br />
-                <br />
+                <Stepper css={stepperStyle} activeStep={this.state.pageIndex}>
+                    <Step key="Type Selection" completed={this.state.pageIndex > 0}>
+                        <StepLabel>
+                            Type Selection
+                        </StepLabel>
+                    </Step>
+                    <Step key="Instrument Selection" completed={this.state.pageIndex > 1}>
+                        <StepLabel>
+                            Instrument Selection
+                        </StepLabel>
+                    </Step>
+                    <Step key="Color Selection" completed={false}>
+                        <StepLabel>
+                            Color Selection
+                        </StepLabel>
+                    </Step>
+                </Stepper>
                 <div css={formStyle}>
-                    {/*TODO stepper from material ui*/}
                     {page}
                 </div>
-                <br />
-                <br />
                 <div css={buttonWrapperStyle}>
                     <TextButton color={closeColor}
                                 hoverColor={closeColorHighlight}
@@ -231,7 +258,7 @@ export class InstrumentModal extends React.Component {
                     <TextButton color={addColor}
                                 hoverColor={addColorHighlight}
                                 text={this.state.pageIndex === 2 ? this.props.action : "Next"}
-                                icon={this.state.pageIndex === 2 ? this.props.actionIcon : null}
+                                icon={this.state.pageIndex === 2 ? this.props.actionIcon : <ArrowRightAlt />}
                                 onClick={this.onNext} />
                 </div>
             </div>

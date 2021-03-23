@@ -4,6 +4,12 @@ import React from 'react';
 import { jsx, css } from '@emotion/react'
 import {FormControl, FormHelperText, InputLabel, MenuItem, Select} from "@material-ui/core";
 
+const formWrapperStyle = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
 export class SelectValuePage extends React.Component {
 
     render() {
@@ -12,7 +18,7 @@ export class SelectValuePage extends React.Component {
             items.push(<MenuItem value={this.props.values[i]}>{this.props.titles[i]}</MenuItem>)
         }
 
-        return <div>
+        return <div css={formWrapperStyle}>
             <FormControl>
                 <InputLabel>{this.props.title}</InputLabel>
                 <Select
