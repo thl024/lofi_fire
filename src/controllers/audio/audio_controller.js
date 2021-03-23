@@ -15,8 +15,8 @@ export class AudioController {
             instrument.fileType, this.allNotes, callback)
     }
 
-    unloadInstrument(instrument) {
-        this.audioPlayer.unloadSoundLibrary(instrument.id)
+    unloadInstrument(id) {
+        this.audioPlayer.unloadSoundLibrary(id)
     }
 
     playSingleNote(id, index) {

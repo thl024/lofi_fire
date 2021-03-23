@@ -3,7 +3,7 @@
 import React from 'react';
 import { jsx, css } from '@emotion/react'
 
-export class Button extends React.Component {
+export class IconCircleButton extends React.Component {
     render() {
         // Generate css
         const style = css`

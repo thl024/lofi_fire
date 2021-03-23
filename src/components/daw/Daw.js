@@ -25,7 +25,10 @@ export class Daw extends React.Component {
 
     render() {
         let pianoRollSection = <div className="playlist-wrapper">
-            <InstrumentPicker onCreateInstrument={this.controller.onCreateInstrument} />
+            <InstrumentPicker
+                onCreateInstrument={this.controller.onCreateInstrument}
+                onEditInstrument={this.controller.onEditInstrument}
+                onDeleteInstrument={this.controller.onDeleteInstrument}/>
             <PianoRoll notifyNote={this.controller.notifySingleNote} />
         </div>
 

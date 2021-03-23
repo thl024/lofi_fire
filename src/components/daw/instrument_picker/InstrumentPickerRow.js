@@ -3,7 +3,9 @@
 import React from 'react';
 import { jsx, css } from '@emotion/react'
 import './InstrumentPickerRow.css'
-import {Button} from "../common/Button";
+import {IconCircleButton} from "../common/IconCircleButton";
+import {InstrumentModal} from "./InstrumentModal";
+import EditIcon from '@material-ui/icons/Edit';
 
 export class InstrumentPickerRow extends React.Component {
 
@@ -13,9 +15,17 @@ export class InstrumentPickerRow extends React.Component {
         this.onRefreshWithIndex = this.onRefreshWithIndex.bind(this);
         this.onEditModalPopup = this.onEditModalPopup.bind(this);
         this.onDeleteWithIndex = this.onDeleteWithIndex.bind(this);
+
+        this.openEditModal = this.openEditModal.bind(this);
+        this.closeEditModal = this.closeEditModal.bind(this);
+        this.onEditInstrumentFinish = this.onEditInstrumentFinish.bind(this);
+
+        this.state = {
+            editModalOpen: false,
+        }
     }
 
-    onSelectWithFilter(event) {
+    onSelectWithFilter() {
         this.props.onSelect(this.props.index)
     }
 
@@ -24,15 +34,34 @@ export class InstrumentPickerRow extends React.Component {
         this.props.onRefresh(this.props.index);
     }
 
+    onEditInstrumentFinish(name, color) {
+        this.props.onEditInstrument(this.props.index, name, color)
+    }
+
     onEditModalPopup(e) {
-        // TODO show modal
-        // TODO on modal finish call this.props.onEdit(this.props.index);
         e.stopPropagation();
+        this.openEditModal();
     }
 
     onDeleteWithIndex(e) {
         e.stopPropagation();
-        this.props.onDelete(this.props.index);
+        this.props.onDeleteInstrument(this.props.index);
+    }
+
+    openEditModal() {
+        this.setState(state => {
+            return {
+                editModalOpen: true,
+            }
+        })
+    }
+
+    closeEditModal() {
+        this.setState(state => {
+            return {
+                editModalOpen: false
+            }
+        })
     }
 
     render() {
@@ -45,9 +74,18 @@ export class InstrumentPickerRow extends React.Component {
         return <div style={{backgroundColor: this.props.color}}
                     className={instrumentRowClasses} onClick={this.onSelectWithFilter}>
             <p className="instrument-text">{instrumentText}</p>
-            <Button color="#757575" hoverColor="#BDBDBD" icon="refresh" onClick={this.onRefreshWithIndex} />
-            <Button color="#757575" hoverColor="#BDBDBD" icon="edit" onClick={this.onEditModalPopup} />
-            <Button color="#757575" hoverColor="#BDBDBD" icon="delete" onClick={this.onDeleteWithIndex} />
+            <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="refresh" onClick={this.onRefreshWithIndex} />
+            <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="edit" onClick={this.onEditModalPopup} />
+            <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="delete" onClick={this.onDeleteWithIndex} />
+
+            <InstrumentModal
+                open={this.state.editModalOpen}
+                name={this.props.instrument}
+                color={this.props.color}
+                action="Edit"
+                actionIcon={<EditIcon />}
+                onClose={this.closeEditModal}
+                onNotifyInstrumentChange={this.onEditInstrumentFinish} />
         </div>
     }
 }

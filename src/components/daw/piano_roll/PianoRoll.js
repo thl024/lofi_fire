@@ -3,7 +3,6 @@
 import React from 'react';
 import { jsx, css } from '@emotion/react'
 import {ALL_KEYS, NUM_MEASURES} from "../../../utils/constants";
-import {connect} from "react-redux";
 import {PianoRollHeader} from "./PianoRollHeader";
 import PianoRollItem from "./PianoRollItem";
 

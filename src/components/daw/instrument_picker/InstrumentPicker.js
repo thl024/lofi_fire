@@ -1,56 +1,47 @@
 import React from 'react';
 import './InstrumentPicker.css'
 import {InstrumentPickerRow} from "./InstrumentPickerRow";
-import {InstrumentAdderModal} from "./InstrumentAdderModal";
 import {connect} from "react-redux";
-import {refreshInstrument, selectInstrument} from "../../../redux/actions";
+import {
+    refreshInstrument,
+    selectInstrument
+} from "../../../redux/actions";
+import {InstrumentModal} from "./InstrumentModal";
+import {instrument_mappings} from "../../../utils/instrument_mappings";
+import AddIcon from "@material-ui/icons/Add";
 
 class InstrumentPicker extends React.Component {
-
-    // Updates the BPM
-    addNewInstrument = () => (value) => {
-        // Notify global instance
-
-    };
 
     constructor(props) {
         super(props);
 
-        this.onEditInstrument = this.onEditInstrument.bind(this);
         this.onDeleteInstrument = this.onDeleteInstrument.bind(this);
-        this.onOpenAddInstrumentModal = this.onOpenAddInstrumentModal.bind(this);
-        this.onCloseAddInstrumentModal = this.onCloseAddInstrumentModal.bind(this);
+        this.openAddModal = this.openAddModal.bind(this);
+        this.closeAddModal = this.closeAddModal.bind(this);
+
         this.state = {
-            "modalOpen": false
+            addModalOpen: false,
         }
-    }
-
-    onOpenAddInstrumentModal() {
-        this.setState(state => {
-            return {
-                "modalOpen": true
-            }
-        })
-
-        // TODO based on results, call back on
-        // this.props.onCreateInstrument which will refer to main controller
-    }
-
-    onCloseAddInstrumentModal() {
-        this.setState(state => {
-            return {
-                "modalOpen": false
-            }
-        })
-    }
-
-    onEditInstrument(index) {
-        // TODO may need to open modal
-        // TODO may need to call back on a prop named this.props.onEditInstrument, as may need to load new audio library
     }
 
     onDeleteInstrument(index) {
 
+    }
+
+    openAddModal() {
+        this.setState(state => {
+            return {
+                addModalOpen: true
+            }
+        })
+    }
+
+    closeAddModal() {
+        this.setState(state => {
+            return {
+                addModalOpen: false
+            }
+        })
     }
 
     render() {
@@ -61,7 +52,7 @@ class InstrumentPicker extends React.Component {
                     <div className="instrument-picker-header">
                         <li className="instrument-picker-header-text">Instruments</li>
                         <button className="btn-floating btn-large waves-effect waves-light add-button"
-                                onClick={this.onOpenAddInstrumentModal}>
+                                onClick={() => this.openAddModal(true)}>
                             <i className="material-icons">add</i>
                         </button>
                     </div>
@@ -75,16 +66,25 @@ class InstrumentPicker extends React.Component {
                             return <InstrumentPickerRow index={index}
                                                         instrument={name}
                                                         color={this.props.colors[index]}
+                                                        onEditInstrument={this.props.onEditInstrument}
+                                                        onDeleteInstrument={this.props.onDeleteInstrument}
                                                         onRefresh={this.props.refreshInstrument}
-                                                        onEdit={this.onEditInstrument}
-                                                        onDelete={this.onDeleteInstrument}
                                                         onSelect={this.props.selectInstrument}
                                                         key={index}
                                                         selected={selected} />
                         })}
                     </div>
                 </ul>
-            <InstrumentAdderModal open={this.state.modalOpen} onClose={this.onCloseAddInstrumentModal} />
+
+            {/* TODO -- figure out a way to render this without re-rendering all instruments*/}
+            <InstrumentModal
+                open={this.state.addModalOpen}
+                onClose={this.closeAddModal}
+                action="Add"
+                actionIcon={<AddIcon />}
+                name={Object.keys(instrument_mappings)[0]}
+                color={instrument_mappings[Object.keys(instrument_mappings)[0]].color}
+                onNotifyInstrumentChange={this.props.onCreateInstrument} />
         </div>
     }
 }
@@ -99,6 +99,6 @@ export default connect(
         }},
     (dispatch) => ({
         selectInstrument: (index) => dispatch(selectInstrument(index)),
-        refreshInstrument: (index) => dispatch(refreshInstrument(index))
+        refreshInstrument: (index) => dispatch(refreshInstrument(index)),
     })
 )(InstrumentPicker)

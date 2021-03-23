@@ -1,13 +1,14 @@
 // Action types
 export const CHANGE_BPM = "bpm/changed";
 export const ADD_INSTRUMENT = "instrument/new";
+export const EDIT_INSTRUMENT = "instrument/edit";
+export const DELETE_INSTRUMENT = "instrument/delete";
 export const SELECT_INSTRUMENT = "instrument/select";
 export const REFRESH_INSTRUMENT = "instrument/refresh";
 export const TOGGLE_PIANO_ROLL_NOTE = "pianoroll/toggle";
 export const ON_PLAY_BEAT = "onplay/beat";
 
 export const RESET = "reset";
-
 /**
  * Playback Actions
  */
@@ -23,6 +24,16 @@ export const addInstrument = content => ({
     type: ADD_INSTRUMENT,
     payload: content
 })
+
+export const editInstrument = content => ({
+    type: EDIT_INSTRUMENT,
+    payload: content
+})
+
+export const deleteInstrument = content => ({
+    type: DELETE_INSTRUMENT,
+    payload: content
+});
 
 export const selectInstrument = content => ({
     type: SELECT_INSTRUMENT,

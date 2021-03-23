@@ -129,26 +129,6 @@ export class AudioPlayer {
         }, this.playState.delay);
     }
 
-
-
-    // recursivePlay(fullSequence, tempSequence, delay, callback) {
-    //     if (tempSequence.length === 0) {
-    //         // Repeat sequence
-    //         tempSequence = [...fullSequence];
-    //     }
-    //
-    //     // Notify that one tick has passed
-    //     callback(fullSequence.length - tempSequence.length);
-    //
-    //     const notes = tempSequence[0];
-    //     this.playGroup(notes)
-    //
-    //     this.currentTimer = setTimeout(() => {
-    //         tempSequence.shift()
-    //         this.recursivePlay(fullSequence, tempSequence, delay, callback)
-    //     }, delay)
-    // }
-
     playGroup(indices) {
         for (const [id, notes] of Object.entries(indices)) {
             notes.forEach(namedNote=> this.playSample(id, namedNote));
@@ -158,7 +138,7 @@ export class AudioPlayer {
     stop() {
         if (this.playState.currentTimer) {
             clearTimeout(this.playState.currentTimer)
-            this.currentTimer = null;
+            this.playState.currentTimer = null;
         }
 
         for (const [id, notes] of  Object.entries(this.preloadedAudio)) {

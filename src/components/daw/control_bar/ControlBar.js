@@ -2,8 +2,17 @@
 /** @jsx jsx */
 import React from 'react';
 import BPMSlider from "./BPMSlider";
-import {Button} from "../common/Button";
+import {IconCircleButton} from "../common/IconCircleButton";
 import { jsx, css } from '@emotion/react'
+import {
+    exportColor,
+    exportColorHighlight,
+    mainThemeColor,
+    mainThemeColorLight, refreshColor,
+    refreshColorHighlight,
+    stopColor,
+    stopColorHighlight
+} from "../../../themes/colors";
 
 const playbackButtonWrapperStyle = css`
   display: flex;
@@ -37,15 +46,15 @@ export class ControlBar extends React.Component {
 
         return <div css={playbackWrapperStyle}>
            <div css={playbackButtonWrapperStyle}>
-               <Button color="#FF9800" hoverColor="#FFE0B2" icon="play_arrow" onClick={this.props.play} />
-               <Button color="#F44336" hoverColor="#FA8072" icon="stop" onClick={this.props.stop} />
+               <IconCircleButton color={mainThemeColor} hoverColor={mainThemeColorLight} icon="play_arrow" onClick={this.props.play} />
+               <IconCircleButton color={stopColor} hoverColor={stopColorHighlight} icon="stop" onClick={this.props.stop} />
            </div>
            <div css={playbackSliderWrapperStyle}>
                <BPMSlider updateBPM={this.props.updateBPM}/>
            </div>
            <div css={playbackButtonWrapperStyle}>
-               <Button color="#757575" hoverColor="#BDBDBD" icon="refresh" onClick={this.props.refresh} />
-               <Button color="#FF9800" hoverColor="#FFE0B2" icon="ios_share" onClick={this.props.export} />
+               <IconCircleButton color={refreshColor} hoverColor={refreshColorHighlight} icon="refresh" onClick={this.props.refresh} />
+               <IconCircleButton color={exportColor} hoverColor={exportColorHighlight} icon="ios_share" onClick={this.props.export} />
            </div>
         </div>
     }

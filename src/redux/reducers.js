@@ -1,7 +1,8 @@
 // Setup initial state
 import {
     ADD_INSTRUMENT,
-    CHANGE_BPM, ON_PLAY_BEAT,
+    CHANGE_BPM, DELETE_INSTRUMENT, EDIT_INSTRUMENT,
+    ON_PLAY_BEAT,
     REFRESH_INSTRUMENT,
     RESET,
     SELECT_INSTRUMENT,
@@ -24,13 +25,13 @@ const initialState = {
     // instTypes: [],
     // fileTypes: [],
     data: [],
-    colors: []
+    colors: [],
 }
 
 // Use the initialState as a default value
 // TODO -- read something about combined reducers, look into that
 export default function appReducer(state = initialState, action) {
-    let data, ids, names, colors;
+    let data, ids, names, colors, index;
     switch (action.type) {
         /**
          * Instrument Actions
@@ -49,6 +50,40 @@ export default function appReducer(state = initialState, action) {
                 data: data,
                 colors: colors
             };
+
+        case EDIT_INSTRUMENT:
+            index = action.payload.index;
+            names = [...state.names]
+            colors = [...state.colors]
+
+            names[index] = action.payload.name;
+            colors[index] = action.payload.color;
+
+            return {
+                ...state,
+                names: names,
+                colors: colors
+            };
+
+        case DELETE_INSTRUMENT:
+            ids = [...state.ids]
+            names = [...state.names]
+            data = [...state.data]
+            colors = [...state.colors]
+
+            ids.splice(action.payload.index);
+            names.splice(action.payload.index);
+            data.splice(action.payload.index);
+            colors.splice(action.payload.index);
+
+            return {
+                ...state,
+                ids: ids,
+                names: names,
+                data: data,
+                colors: colors
+            }
+
         case SELECT_INSTRUMENT:
             return {
                 ...state,

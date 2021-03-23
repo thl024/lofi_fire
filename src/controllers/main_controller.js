@@ -1,10 +1,10 @@
 // TODO setup all playback functionality here, export functionality here
 import {AudioController} from "./audio/audio_controller";
-import {ALL_KEYS} from "../utils/constants";
+import {ALL_KEYS, defaultColorChoices} from "../utils/constants";
 import {instrument_mappings} from "../utils/instrument_mappings";
 import {v4 as uuidv4} from "uuid";
 import {initializeEmptyData} from "../utils/utils";
-import {addInstrument, onPlayBeat, reset} from "../redux/actions";
+import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset} from "../redux/actions";
 import {store} from "../redux/stores"
 
 export class MainController {
@@ -19,14 +19,14 @@ export class MainController {
         this.export = this.export.bind(this);
 
         this.updateBPM = this.audioController.updateBPM;
+        this.onCreateInstrument = this.onCreateInstrument.bind(this);
+        this.onEditInstrument = this.onEditInstrument.bind(this);
+        this.onDeleteInstrument = this.onDeleteInstrument.bind(this);
         this.notifySingleNote = this.notifySingleNote.bind(this);
     }
 
     seedInitialInstruments() {
-        this.onCreateInstrument("Grand Piano", "#fec8c1");
-        this.onCreateInstrument("Nylon Guitar", "#fad9c1");
-        this.onCreateInstrument("Lofi Kick 1", "#ffefd7");
-        this.onCreateInstrument("Lofi Hat 1", "#dcedc1");
+        this.onCreateInstrument(Object.keys(instrument_mappings)[0], defaultColorChoices[0]);
     }
 
     // Creates a new instrument
@@ -51,6 +51,47 @@ export class MainController {
             // Notify redux of new instrument
             store.dispatch(addInstrument(newInstrument))
         });
+    }
+
+    // Edit instrument
+    onEditInstrument(index, instrumentName, instrumentColor) {
+        this.audioController.stop();
+        let state = store.getState();
+
+        let editedInstrument = {
+            id: state.ids[index],
+            name: instrumentName,
+            src: this.instrumentMappings[instrumentName].src,
+            instType: this.instrumentMappings[instrumentName].instType,
+            fileType: this.instrumentMappings[instrumentName].fileType,
+            data: state.data[index],
+            color: instrumentColor
+        }
+
+        this.audioController.unloadInstrument(state.ids[index])
+
+        // Load instrument
+        this.audioController.loadInstrument(editedInstrument, (err) => {
+            if (err) {
+                console.log("Failed to load instrument: " + instrumentName + "; " + err.toString());
+                return;
+            }
+
+            // Notify redux of edited instrument
+            editedInstrument.index = index;
+            store.dispatch(editInstrument(editedInstrument))
+        });
+    }
+
+    onDeleteInstrument(index) {
+        let state = store.getState();
+
+        if (state.ids.length <= 1) {
+            return;
+        }
+
+        this.audioController.unloadInstrument(state.ids[index]);
+        store.dispatch(deleteInstrument(index))
     }
 
     notifySingleNote(noteIndex, timeIndex) {
@@ -92,8 +133,8 @@ export class MainController {
 
     refresh() {
         let state = store.getState();
-        state.names.forEach((name => {
-            this.audioController.unloadInstrument(name)
+        state.ids.forEach((id => {
+            this.audioController.unloadInstrument(id)
         }));
 
         this.clear();
