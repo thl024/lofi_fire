@@ -1,7 +1,7 @@
 // TODO setup all playback functionality here, export functionality here
 import {AudioController} from "./audio/audio_controller";
 import {ALL_KEYS, defaultColorChoices} from "../utils/constants";
-import {instrument_mappings} from "../utils/instrument_mappings";
+import {instrument_mappings} from "../instrument_mappings";
 import {v4 as uuidv4} from "uuid";
 import {initializeEmptyData} from "../utils/utils";
 import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset, selectInstrument} from "../redux/actions";

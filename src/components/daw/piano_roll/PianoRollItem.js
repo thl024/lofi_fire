@@ -49,7 +49,7 @@ class PianoRollItem extends React.Component {
     }
 
     render() {
-        console.log("Render Piano Roll Item at : " + this.props.j + " " + this.props.i);
+        // console.log("Render Piano Roll Item at : " + this.props.j + " " + this.props.i);
 
         if (this.props.data == null || this.props.data.length === 0) {
             return <div />

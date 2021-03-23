@@ -2,18 +2,18 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/react'
-import {InstrumentPickerRow} from "./InstrumentPickerRow";
+import {InstrumentListRow} from "./InstrumentListRow";
 import {connect} from "react-redux";
 import {
     refreshInstrument,
     selectInstrument
 } from "../../../redux/actions";
 import {InstrumentModal} from "./InstrumentModal";
-import {instrument_mappings} from "../../../utils/instrument_mappings";
+import {instrument_mappings} from "../../../instrument_mappings";
 import AddIcon from "@material-ui/icons/Add";
-import {InstrumentPickerHeader} from "./InstrumentPickerHeader";
+import {InstrumentListHeader} from "./InstrumentListHeader";
 
-const instrumentPickerWrapperStyle = css`
+const instrumentListWrapperStyle = css`
   flex-grow: 0.5;
   
   border-bottom: solid 2px #757575;
@@ -45,7 +45,7 @@ const scrollAreaStyle = css`
   overflow-x: hidden;
 `
 
-class InstrumentPicker extends React.Component {
+class InstrumentList extends React.Component {
 
     constructor(props) {
         super(props);
@@ -77,21 +77,21 @@ class InstrumentPicker extends React.Component {
     render() {
         console.log("Rerender Instrument List");
 
-        return <div css={instrumentPickerWrapperStyle}>
+        return <div css={instrumentListWrapperStyle}>
                 <ul css={instrumentListStyle}>
-                    <InstrumentPickerHeader openAddModal={this.openAddModal}/>
+                    <InstrumentListHeader openAddModal={this.openAddModal}/>
                     <div css={scrollAreaStyle}>
                         {this.props.names.map((name, index, _) => {
                             const selected = index === this.props.selectedIndex;
-                            return <InstrumentPickerRow index={index}
-                                                        instrument={name}
-                                                        color={this.props.colors[index]}
-                                                        onEditInstrument={this.props.onEditInstrument}
-                                                        onDeleteInstrument={this.props.onDeleteInstrument}
-                                                        onRefresh={this.props.refreshInstrument}
-                                                        onSelect={this.props.selectInstrument}
-                                                        key={index}
-                                                        selected={selected} />
+                            return <InstrumentListRow index={index}
+                                                      instrument={name}
+                                                      color={this.props.colors[index]}
+                                                      onEditInstrument={this.props.onEditInstrument}
+                                                      onDeleteInstrument={this.props.onDeleteInstrument}
+                                                      onRefresh={this.props.refreshInstrument}
+                                                      onSelect={this.props.selectInstrument}
+                                                      key={index}
+                                                      selected={selected} />
                         })}
                     </div>
                 </ul>
@@ -120,4 +120,4 @@ export default connect(
         selectInstrument: (index) => dispatch(selectInstrument(index)),
         refreshInstrument: (index) => dispatch(refreshInstrument(index)),
     })
-)(InstrumentPicker)
+)(InstrumentList)

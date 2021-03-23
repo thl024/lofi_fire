@@ -1,6 +1,6 @@
 import React from 'react';
 import {ControlBar} from "./control_bar/ControlBar";
-import InstrumentPicker from "./instrument_picker/InstrumentPicker";
+import InstrumentPicker from "./instrument_list/InstrumentList";
 import {PianoRoll} from "./piano_roll/PianoRoll";
 import './Daw.css';
 import {MainController} from "../../controllers/main_controller";

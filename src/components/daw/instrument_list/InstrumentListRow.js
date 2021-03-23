@@ -22,7 +22,7 @@ const instrumentTextStyle = css`
   flex-grow: 10;
 `
 
-export class InstrumentPickerRow extends React.Component {
+export class InstrumentListRow extends React.Component {
 
     constructor(props) {
         super(props);

@@ -21,9 +21,6 @@ const initialState = {
     // instruments: [],
     ids: [],
     names: [],
-    // srcs: [],
-    // instTypes: [],
-    // fileTypes: [],
     data: [],
     colors: [],
 }
