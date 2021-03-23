@@ -15,17 +15,12 @@ class InstrumentPicker extends React.Component {
     constructor(props) {
         super(props);
 
-        this.onDeleteInstrument = this.onDeleteInstrument.bind(this);
         this.openAddModal = this.openAddModal.bind(this);
         this.closeAddModal = this.closeAddModal.bind(this);
 
         this.state = {
             addModalOpen: false,
         }
-    }
-
-    onDeleteInstrument(index) {
-
     }
 
     openAddModal() {

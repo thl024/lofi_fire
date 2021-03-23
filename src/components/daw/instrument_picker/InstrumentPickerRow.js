@@ -6,6 +6,7 @@ import './InstrumentPickerRow.css'
 import {IconCircleButton} from "../common/IconCircleButton";
 import {InstrumentModal} from "./InstrumentModal";
 import EditIcon from '@material-ui/icons/Edit';
+import {NUM_MEASURES} from "../../../utils/constants";
 
 export class InstrumentPickerRow extends React.Component {
 
@@ -23,6 +24,14 @@ export class InstrumentPickerRow extends React.Component {
         this.state = {
             editModalOpen: false,
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        // No need to update on index update, as row styles do not depend on them
+        return this.props.instrument !== nextProps.instrument ||
+            this.props.color !== nextProps.color ||
+            this.props.selected !== nextProps.selected ||
+            this.state.editModalOpen !== nextState.editModalOpen
     }
 
     onSelectWithFilter() {
@@ -65,8 +74,11 @@ export class InstrumentPickerRow extends React.Component {
     }
 
     render() {
+        console.log("Rerender Instrument List Row: " + this.props.index)
         let instrumentRowClasses = "instrument-row-wrapper";
         let instrumentText = this.props.instrument
+
+        // TODO more elegant way to indicate selected row
         if (this.props.selected) {
             instrumentText = "> " + this.props.instrument
         }

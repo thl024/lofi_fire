@@ -15,6 +15,11 @@ import {
 } from "../../../themes/colors";
 import CloseIcon from '@material-ui/icons/Close';
 
+const modalTitleStyle = css`
+  text-align: center;
+  font-size: 3.5vw;
+`
+
 const modalStyle = css`
   display: flex;
   align-items: center;
@@ -23,7 +28,9 @@ const modalStyle = css`
 
 const modalBodyStyle=css`
   background-color: #FFFFFF;
-  padding: 2% 5% 5% 5%;
+  padding: 2% 5% 0% 5%;
+  width: 50%;
+  height: 50%;
   border-radius: 25px;
 `
 
@@ -87,7 +94,7 @@ export class InstrumentModal extends React.Component {
 
         const body = (
             <div css={modalBodyStyle}>
-                <h2>{this.props.action + " Instrument"}</h2>
+                <h2 css={modalTitleStyle}>{this.props.action + " Instrument"}</h2>
                 <br />
                 <br />
                 <div css={formStyle}>

@@ -71,10 +71,10 @@ export default function appReducer(state = initialState, action) {
             data = [...state.data]
             colors = [...state.colors]
 
-            ids.splice(action.payload.index);
-            names.splice(action.payload.index);
-            data.splice(action.payload.index);
-            colors.splice(action.payload.index);
+            ids.splice(action.payload, 1);
+            names.splice(action.payload, 1);
+            data.splice(action.payload, 1);
+            colors.splice(action.payload, 1);
 
             return {
                 ...state,
