@@ -61,7 +61,7 @@ class PianoRollItem extends React.Component {
 
         let pianoRollRowItemStyle = css`
           /*  Child flex grow property */
-          flex-grow: 1;
+          flex-basis: 50px;
 
           /*  CSS Properties  */
           border-right: solid 1px #BDBDBD;

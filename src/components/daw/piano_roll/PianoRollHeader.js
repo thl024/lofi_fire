@@ -7,7 +7,7 @@ import PianoRollHeaderCell from "./PianoRollHeaderCell";
 
 const pianoRollRowHeaderWrapperStyle = css`
   /*  Child flex grow property */
-  flex-grow: 0.4;
+  flex-shrink: 0.4;
 
   /*  Parent flex properties */
   display: flex;

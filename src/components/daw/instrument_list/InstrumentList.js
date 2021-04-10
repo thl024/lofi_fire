@@ -9,7 +9,7 @@ import {
     selectInstrument
 } from "../../../redux/actions";
 import {InstrumentModal} from "./InstrumentModal";
-import {instrument_mappings} from "../../../instrument_mappings";
+import {instrument_mappings} from "../../../configs/instrument_mappings";
 import AddIcon from "@material-ui/icons/Add";
 import {InstrumentListHeader} from "./InstrumentListHeader";
 

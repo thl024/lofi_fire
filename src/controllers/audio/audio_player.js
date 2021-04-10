@@ -25,8 +25,8 @@ export class AudioPlayer {
 
         switch (instType) {
             case "toned": this.loadNotedSoundLibrary(id,  src, fileType, notes, callback); break;
-            case "perc": this.loadPercSoundLibrary(id, src, fileType, callback); break;
-            default: callback(new Error("Unrecognized instrument type"));
+            case "perc": this.loadSingleSampleSoundLibrary(id, src, fileType, "perc", callback); break;
+            case "sfx": this.loadSingleSampleSoundLibrary(id, src, fileType, "sfx", callback); break;
         }
     }
 
@@ -67,11 +67,11 @@ export class AudioPlayer {
         });
     }
 
-    loadPercSoundLibrary(id, src, fileType, callback) {
+    loadSingleSampleSoundLibrary(id, src, fileType, type, callback) {
         let sound = new Howl({
             src: [src + "." + fileType],
             onload: () => {
-                this.typeMap[id] = "perc";
+                this.typeMap[id] = type;
                 this.preloadedAudio[id] = sound;
                 callback(null);
             },
@@ -100,14 +100,25 @@ export class AudioPlayer {
         return this.playState.currentTimer !== null
     }
 
-    playSample(id, note) {
+    playSample(id, note, ind) {
         let sample;
-        if (this.typeMap[id] === "perc") {
-            sample = this.preloadedAudio[id];
-        } else {
-            sample = this.preloadedAudio[id][note];
+        switch (this.typeMap[id]) {
+            case "perc":
+                sample = this.preloadedAudio[id];
+                sample.play();
+                break;
+            case "toned":
+                sample = this.preloadedAudio[id][note];
+                sample.play();
+                break;
+            case "sfx":
+                sample = this.preloadedAudio[id];
+                if (ind === 0) {
+                    sample.stop();
+                    sample.play();
+                }
+                break;
         }
-        sample.play();
     }
 
     playSampleSequence(callback) {
@@ -121,7 +132,7 @@ export class AudioPlayer {
 
     recursivePlay(index, callback) {
         callback(index);
-        this.playGroup(this.playState.sequence[index]);
+        this.playGroup(this.playState.sequence[index], index);
 
         this.playState.currentTimer = setTimeout(() => {
             let newIndex = (index + 1) % this.playState.sequence.length
@@ -129,9 +140,9 @@ export class AudioPlayer {
         }, this.playState.delay);
     }
 
-    playGroup(indices) {
+    playGroup(indices, ind) {
         for (const [id, notes] of Object.entries(indices)) {
-            notes.forEach(namedNote=> this.playSample(id, namedNote));
+            notes.forEach(namedNote=> this.playSample(id, namedNote, ind));
         }
     }
 
@@ -142,12 +153,18 @@ export class AudioPlayer {
         }
 
         for (const [id, notes] of  Object.entries(this.preloadedAudio)) {
-            if (this.typeMap[id] === "perc") {
-                notes.stop();
-            } else {
-                for (const [, note] of Object.entries(notes)) {
-                    note.stop();
-                }
+            switch (this.typeMap[id]) {
+                case "perc":
+                    notes.stop();
+                    break;
+                case "toned":
+                    for (const [, note] of Object.entries(notes)) {
+                        note.stop();
+                    }
+                    break;
+                case "sfx":
+                    notes.stop();
+                    break;
             }
         }
     }

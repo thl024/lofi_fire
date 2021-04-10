@@ -3,7 +3,7 @@
 import React from 'react';
 import {jsx, css} from '@emotion/react'
 import {Modal, Step, StepLabel, Stepper} from "@material-ui/core";
-import {instrument_mappings} from "../../../instrument_mappings";
+import {instrument_mappings} from "../../../configs/instrument_mappings";
 import {TextButton} from "../common/TextButton";
 import {addColor, addColorHighlight, closeColor, closeColorHighlight,} from "../../../themes/colors";
 import {SelectValuePage} from "../form_page/SelectValuePage";

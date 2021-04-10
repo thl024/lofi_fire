@@ -1,7 +1,7 @@
 // TODO setup all playback functionality here, export functionality here
 import {AudioController} from "./audio/audio_controller";
 import {ALL_KEYS, defaultColorChoices} from "../utils/constants";
-import {instrument_mappings} from "../instrument_mappings";
+import {instrument_mappings} from "../configs/instrument_mappings";
 import {v4 as uuidv4} from "uuid";
 import {initializeEmptyData} from "../utils/utils";
 import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset, selectInstrument} from "../redux/actions";
@@ -107,8 +107,10 @@ export class MainController {
         const state = store.getState();
         const data = state.data[state.selectedIndex];
         const id = state.ids[state.selectedIndex];
+
         // Play single note if turned on
-        if (!data[noteIndex][timeIndex]) {
+        if (instrument_mappings[state.names[state.selectedIndex]].instType !== "sfx" &&
+            !data[noteIndex][timeIndex]) {
             this.audioController.playSingleNote(id, noteIndex)
         }
 
