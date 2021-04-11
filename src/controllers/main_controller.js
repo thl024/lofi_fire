@@ -6,12 +6,14 @@ import {v4 as uuidv4} from "uuid";
 import {initializeEmptyData} from "../utils/utils";
 import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset, selectInstrument} from "../redux/actions";
 import {store} from "../redux/stores"
+import {saveProjectState} from "../utils/network";
 
 export class MainController {
 
-    constructor() {
+    constructor(pid) {
         this.audioController = new AudioController(ALL_KEYS);
         this.instrumentMappings = instrument_mappings;
+        this.pid = pid;
 
         this.play = this.play.bind(this);
         this.stop = this.stop.bind(this);
@@ -25,19 +27,29 @@ export class MainController {
         this.notifySingleNote = this.notifySingleNote.bind(this);
     }
 
-    seedInitialInstruments() {
-        this.onCreateInstrument(Object.keys(instrument_mappings)[0], defaultColorChoices[0]);
+    // TODO callback when finished
+    seedInstruments(projectData) {
+        // No project id
+        if (projectData === null) {
+            this.onCreateInstrument(Object.keys(instrument_mappings)[0], defaultColorChoices[0]);
+        } else { // Project id included
+            // Project details
+        }
     }
 
     // Creates a new instrument
     onCreateInstrument(instrumentName, instrumentColor) {
+        this.onCreateInstrumentWithData(instrumentName, instrumentColor, initializeEmptyData())
+    }
+
+    onCreateInstrumentWithData(instrumentName, instrumentColor, data) {
         let newInstrument = {
             id: uuidv4(),
             name: instrumentName,
             src: this.instrumentMappings[instrumentName].src,
             instType: this.instrumentMappings[instrumentName].instType,
             fileType: this.instrumentMappings[instrumentName].fileType,
-            data: initializeEmptyData(),
+            data: data,
             color: instrumentColor
         }
 
@@ -151,10 +163,29 @@ export class MainController {
         this.clear();
 
         // Initial instrument seed
-        this.seedInitialInstruments();
+        this.seedInstruments();
     }
 
-    export() {
-        // TODO
+    export(callback, err_callback) {
+        if (this.pid === null || this.pid === undefined) {
+            this.pid = uuidv4();
+        }
+
+        let state = store.getState();
+        let projectPayload = {
+            pid: this.pid,
+            names: state.names,
+            data: state.data,
+            ids: state.ids,
+            colors: state.colors,
+        }
+
+        saveProjectState(projectPayload, (res) => {
+            // callback(this.pid);
+            console.log(res)
+        }, (err) =>  {
+            // err_callback(err)
+            console.log(err)
+        });
     }
 }

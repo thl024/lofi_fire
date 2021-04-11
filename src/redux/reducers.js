@@ -119,7 +119,7 @@ export default function appReducer(state = initialState, action) {
             let newData = currentData.map((row, i) =>
                 row.map((val, j) => {
                     if (i === row_index && j === col_index) {
-                        return !val
+                        return (val + 1) % 2
                     }
                     return val;
                 })

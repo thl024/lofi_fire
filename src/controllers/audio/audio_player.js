@@ -27,6 +27,7 @@ export class AudioPlayer {
             case "toned": this.loadNotedSoundLibrary(id,  src, fileType, notes, callback); break;
             case "perc": this.loadSingleSampleSoundLibrary(id, src, fileType, "perc", callback); break;
             case "sfx": this.loadSingleSampleSoundLibrary(id, src, fileType, "sfx", callback); break;
+            default: callback(Error("Instrument Type does not exist")); break;
         }
     }
 
@@ -118,6 +119,8 @@ export class AudioPlayer {
                     sample.play();
                 }
                 break;
+            default:
+                break;
         }
     }
 
@@ -164,6 +167,8 @@ export class AudioPlayer {
                     break;
                 case "sfx":
                     notes.stop();
+                    break;
+                default:
                     break;
             }
         }

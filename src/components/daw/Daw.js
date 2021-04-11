@@ -3,43 +3,25 @@ import {ControlBar} from "./control_bar/ControlBar";
 import InstrumentPicker from "./instrument_list/InstrumentList";
 import PianoRoll from "./piano_roll/PianoRoll";
 import './Daw.css';
-import {MainController} from "../../controllers/main_controller";
 
-// Main controller, manages data flow between all children
-// (instrument selector, playlist, control bar, audio playback)
-// TODO manage main controller here
 export class Daw extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        // Initialize controller object
-        this.controller = new MainController()
-    }
-
-    // Initialize instruments on page load
-    componentDidMount() {
-        this.controller.clear();
-        this.controller.seedInitialInstruments();
-    }
-
     render() {
+        console.log("Rerender DAW");
         let pianoRollSection = <div className="playlist-wrapper">
             <InstrumentPicker
-                onCreateInstrument={this.controller.onCreateInstrument}
-                onEditInstrument={this.controller.onEditInstrument}
-                onDeleteInstrument={this.controller.onDeleteInstrument}/>
-            <PianoRoll notifyNote={this.controller.notifySingleNote} />
+                onCreateInstrument={this.props.onCreateInstrument}
+                onEditInstrument={this.props.onEditInstrument}
+                onDeleteInstrument={this.props.onDeleteInstrument} />
+            <PianoRoll notifyNote={this.props.notifySingleNote} />
         </div>
 
         return <div className={"mainApp"} >
-            <ControlBar
-                className={"controlBar"}
-                updateBPM={this.controller.updateBPM}
-                play={this.controller.play}
-                stop={this.controller.stop}
-                refresh={this.controller.refresh}
-                export={this.controller.export} />
+            <ControlBar className={"controlBar"}
+                updateBPM={this.props.updateBPM}
+                play={this.props.play}
+                stop={this.props.stop}
+                refresh={this.props.refresh}
+                export={this.props.export}/>
             <br />
             {pianoRollSection}
         </div>

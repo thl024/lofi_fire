@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/lofi_fire.iml" filepath="$PROJECT_DIR$/.idea/lofi_fire.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../muselab_server/.idea/muselab_server.iml" filepath="$PROJECT_DIR$/../muselab_server/.idea/muselab_server.iml" />
     </modules>
   </component>
 </project>
