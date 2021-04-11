@@ -9,4 +9,4 @@ A simple online DAW built using React. Additional libraries used:
 
 Simple launch command for react applications:
 
-`npm run start'
+`npm run start`
