@@ -42,6 +42,7 @@ export class AudioPlayer {
 
         // Load all notes for given library
         notes.forEach(namedNote => {
+            console.log(src + namedNote + "." +  fileType);
             let sound = new Howl({
                 src: [src + namedNote + "." +  fileType],
                 onload: () => {

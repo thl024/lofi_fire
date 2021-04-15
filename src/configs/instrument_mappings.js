@@ -1,5 +1,6 @@
 // Possible types: toned, perc, sfx
-const BASE_SOUND_RESOURCE_URL = process.env['PUBLIC_URL'] + "./sounds/";
+// const BASE_SOUND_RESOURCE_URL = process.env['PUBLIC_URL'] + "./sounds/";
+const BASE_SOUND_RESOURCE_URL = "./sounds/";
 export const instrument_mappings = {
     "Grand Piano": {
         "src": BASE_SOUND_RESOURCE_URL + "acoustic_grand_piano/",

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
 import {store} from "./redux/stores";
 import {Provider} from "react-redux";
 
@@ -18,9 +18,7 @@ function MuselabApp() {
 function RouterComponent() {
     return <Router>
         <Route exact path="/" component={MuselabApp} />
-        <Switch>
-            <Route path="/project/:pid" children={<MuselabApp />} />
-        </Switch>
+        <Route exact path="/project/:pid" component={MuselabApp} />
     </Router>
 }
 

@@ -3,7 +3,7 @@ import {AudioController} from "./audio/audio_controller";
 import {ALL_KEYS, defaultColorChoices} from "../utils/constants";
 import {instrument_mappings} from "../configs/instrument_mappings";
 import {v4 as uuidv4} from "uuid";
-import {initializeEmptyData} from "../utils/utils";
+import {generatePayload, initializeEmptyData} from "../utils/utils";
 import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset, selectInstrument} from "../redux/actions";
 import {store} from "../redux/stores"
 import {saveProjectState} from "../utils/network";
@@ -27,24 +27,26 @@ export class MainController {
         this.notifySingleNote = this.notifySingleNote.bind(this);
     }
 
-    // TODO callback when finished
     seedInstruments(projectData) {
         // No project id
         if (projectData === null) {
             this.onCreateInstrument(Object.keys(instrument_mappings)[0], defaultColorChoices[0]);
         } else { // Project id included
             // Project details
+            projectData.instruments.forEach((inst) => {
+                this.onCreateInstrumentWithData(inst.name, inst.color, inst.data, inst.id);
+            })
         }
     }
 
     // Creates a new instrument
     onCreateInstrument(instrumentName, instrumentColor) {
-        this.onCreateInstrumentWithData(instrumentName, instrumentColor, initializeEmptyData())
+        this.onCreateInstrumentWithData(instrumentName, instrumentColor, initializeEmptyData(), uuidv4())
     }
 
-    onCreateInstrumentWithData(instrumentName, instrumentColor, data) {
+    onCreateInstrumentWithData(instrumentName, instrumentColor, data, id) {
         let newInstrument = {
-            id: uuidv4(),
+            id: id,
             name: instrumentName,
             src: this.instrumentMappings[instrumentName].src,
             instType: this.instrumentMappings[instrumentName].instType,
@@ -167,10 +169,6 @@ export class MainController {
     }
 
     export(callback, err_callback) {
-        if (this.pid === null || this.pid === undefined) {
-            this.pid = uuidv4();
-        }
-
         let state = store.getState();
         let projectPayload = {
             pid: this.pid,
@@ -180,9 +178,9 @@ export class MainController {
             colors: state.colors,
         }
 
-        saveProjectState(projectPayload, (res) => {
-            // callback(this.pid);
-            console.log(res)
+        saveProjectState(generatePayload(projectPayload), (res) => {
+            // callback(res.pid);
+            console.log(res);
         }, (err) =>  {
             // err_callback(err)
             console.log(err)

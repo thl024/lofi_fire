@@ -14,18 +14,22 @@ function App() {
     const _isMounted = useRef(true); // Initial value _isMounted = true
 
     // Manage data flow & audio
-    let controller = new MainController(pid)
+    // let controller = new MainController(pid)
+    let controller = new MainController(pid);
 
     // Controller initialization and seeding initial project data
     useEffect(() => {
+        // TODO -- state for is loading should happen on app
+        // TODO -- callback from main controller if loading finished
+
         // Update the document title using the browser API
         controller.clear();
 
-        // API call to  retrieve  project details
+        // API call to retrieve project details
         if (pid !== null && pid !== undefined) {
             getProjectState(pid,  (res) => {
                 if (_isMounted.current) {
-                    // TODO populate instruments
+                    controller.seedInstruments(res);
                 }
             }, (err) => {
                 if (_isMounted.current) {
@@ -34,7 +38,7 @@ function App() {
                     setRedirect(true);
                 }
             })
-        } else{
+        } else {
             controller.seedInstruments(null);
         }
     });
@@ -45,8 +49,7 @@ function App() {
 
     return (<div className="App">
             <h2 className={"title"}>Muselab</h2>
-            <Daw pid={pid}
-                 onCreateInstrument={controller.onCreateInstrument}
+            <Daw onCreateInstrument={controller.onCreateInstrument}
                  onEditInstrument={controller.onEditInstrument}
                  onDeleteInstrument={controller.onDeleteInstrument}
                  updateBPM={controller.updateBPM}
