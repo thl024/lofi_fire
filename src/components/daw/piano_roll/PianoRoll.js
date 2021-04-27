@@ -6,7 +6,7 @@ import {ALL_KEYS, NUM_MEASURES} from "../../../utils/constants";
 import {PianoRollHeader} from "./PianoRollHeader";
 import PianoRollItem from "./PianoRollItem";
 import {connect} from "react-redux";
-import {instrument_mappings} from "../../../configs/instrument_mappings";
+import {audio_metadata} from "../../../controllers/audio_metadata";
 
 const pianoRollWrapperStyle = css`
   /*  Child flex grow property */
@@ -63,7 +63,7 @@ export default connect(
     (state) => {
         let type = "toned"; // Default piano roll look
         if (state.names.length > 0) {
-            type = instrument_mappings[state.names[state.selectedIndex]].instType;
+            type = audio_metadata[state.names[state.selectedIndex]].instType;
         }
         return {
             type: type

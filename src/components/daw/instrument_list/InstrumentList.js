@@ -9,7 +9,7 @@ import {
     selectInstrument
 } from "../../../redux/actions";
 import {InstrumentModal} from "./InstrumentModal";
-import {instrument_mappings} from "../../../configs/instrument_mappings";
+import {audio_metadata} from "../../../controllers/audio_metadata";
 import AddIcon from "@material-ui/icons/Add";
 import {InstrumentListHeader} from "./InstrumentListHeader";
 
@@ -101,8 +101,8 @@ class InstrumentList extends React.Component {
                 onClose={this.closeAddModal}
                 action="Add"
                 actionIcon={<AddIcon />}
-                name={Object.keys(instrument_mappings)[0]}
-                color={instrument_mappings[Object.keys(instrument_mappings)[0]].color}
+                name={Object.keys(audio_metadata)[0]}
+                color={audio_metadata[Object.keys(audio_metadata)[0]].color}
                 onNotifyInstrumentChange={this.props.onCreateInstrument} />
         </div>
     }

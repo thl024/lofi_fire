@@ -11,8 +11,7 @@ export class AudioController {
     }
 
     loadInstrument(instrument, callback) {
-        this.audioPlayer.loadSoundLibrary(instrument.id, instrument.src, instrument.instType,
-            instrument.fileType, this.allNotes, callback)
+        this.audioPlayer.loadSoundLibrary(instrument.id, instrument.name, this.allNotes, callback)
     }
 
     unloadInstrument(id) {
@@ -94,8 +93,3 @@ export class AudioController {
         return (60/bpm)/4 * 1000
     }
 }
-
-
-
-// TODO redux to get bpm live (and set audio player state)
-// TODO -- AUDIO PLAYER SHOULD BE STATEFUL!!!!!!!!!!, AND THIS WOULD ALLOW PLAYBACK TO CHANGE W/ BPM AND DATA UPDATES LIVE!

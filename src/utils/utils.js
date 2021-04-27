@@ -28,6 +28,17 @@ export function generatePayload(projectPayload) {
     }
     return convertedPayload;
 }
+
+export function _base64ToArrayBuffer(base64) {
+    var binary_string =  window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++)        {
+        var ascii = binary_string.charCodeAt(i);
+        bytes[i] = ascii;
+    }
+    return bytes.buffer;
+}
 //
 // export function convertResponse(projectResponse) {
 //     let convertedPayload = {names: [], colors: [], data: [], ids: []};

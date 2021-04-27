@@ -8,11 +8,11 @@ import {store} from "./redux/stores";
 import {Provider} from "react-redux";
 
 function MuselabApp() {
-    return <React.StrictMode>
-            <Provider store={store}>
-                <App />
-            </Provider>
-        </React.StrictMode>
+    // return <React.StrictMode>
+    return <Provider store={store}>
+        <App />
+    </Provider>
+        // </React.StrictMode>
 }
 
 function RouterComponent() {

@@ -3,7 +3,7 @@
 import React from 'react';
 import {jsx, css} from '@emotion/react'
 import {Modal, Step, StepLabel, Stepper} from "@material-ui/core";
-import {instrument_mappings} from "../../../configs/instrument_mappings";
+import {audio_metadata} from "../../../controllers/audio_metadata";
 import {TextButton} from "../common/TextButton";
 import {addColor, addColorHighlight, closeColor, closeColorHighlight,} from "../../../themes/colors";
 import {SelectValuePage} from "../form_page/SelectValuePage";
@@ -118,9 +118,9 @@ export class InstrumentModal extends React.Component {
             return "toned";
         }
 
-        Object.keys(instrument_mappings).forEach(function(key) {
+        Object.keys(audio_metadata).forEach(function(key) {
             if (key === name) {
-                return instrument_mappings[key].instType;
+                return audio_metadata[key].instType;
             }
         });
         return "toned";
@@ -128,8 +128,8 @@ export class InstrumentModal extends React.Component {
 
     getInstrumentsWithType(type) {
         let items = []
-        Object.keys(instrument_mappings).forEach(function(key) {
-            if (instrument_mappings[key].instType === type) {
+        Object.keys(audio_metadata).forEach(function(key) {
+            if (audio_metadata[key].instType === type) {
                 items.push(key);
             }
         });

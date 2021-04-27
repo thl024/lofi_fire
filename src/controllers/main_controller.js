@@ -1,7 +1,7 @@
 // TODO setup all playback functionality here, export functionality here
 import {AudioController} from "./audio/audio_controller";
 import {ALL_KEYS, defaultColorChoices} from "../utils/constants";
-import {instrument_mappings} from "../configs/instrument_mappings";
+import {audio_metadata} from "./audio_metadata";
 import {v4 as uuidv4} from "uuid";
 import {generatePayload, initializeEmptyData} from "../utils/utils";
 import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset, selectInstrument} from "../redux/actions";
@@ -12,7 +12,6 @@ export class MainController {
 
     constructor(pid) {
         this.audioController = new AudioController(ALL_KEYS);
-        this.instrumentMappings = instrument_mappings;
         this.pid = pid;
 
         this.play = this.play.bind(this);
@@ -30,7 +29,7 @@ export class MainController {
     seedInstruments(projectData) {
         // No project id
         if (projectData === null) {
-            this.onCreateInstrument(Object.keys(instrument_mappings)[0], defaultColorChoices[0]);
+            this.onCreateInstrument(Object.keys(audio_metadata)[0], defaultColorChoices[0]);
         } else { // Project id included
             // Project details
             projectData.instruments.forEach((inst) => {
@@ -48,9 +47,6 @@ export class MainController {
         let newInstrument = {
             id: id,
             name: instrumentName,
-            src: this.instrumentMappings[instrumentName].src,
-            instType: this.instrumentMappings[instrumentName].instType,
-            fileType: this.instrumentMappings[instrumentName].fileType,
             data: data,
             color: instrumentColor
         }
@@ -61,7 +57,6 @@ export class MainController {
                 console.log("Failed to load instrument: " + instrumentName + "; " + err.toString());
                 return;
             }
-
             // Notify redux of new instrument
             store.dispatch(addInstrument(newInstrument))
         });
@@ -75,9 +70,6 @@ export class MainController {
         let editedInstrument = {
             id: state.ids[index],
             name: instrumentName,
-            src: this.instrumentMappings[instrumentName].src,
-            instType: this.instrumentMappings[instrumentName].instType,
-            fileType: this.instrumentMappings[instrumentName].fileType,
             data: state.data[index],
             color: instrumentColor
         }
@@ -123,7 +115,7 @@ export class MainController {
         const id = state.ids[state.selectedIndex];
 
         // Play single note if turned on
-        if (instrument_mappings[state.names[state.selectedIndex]].instType !== "sfx" &&
+        if (audio_metadata[state.names[state.selectedIndex]].instType !== "sfx" &&
             !data[noteIndex][timeIndex]) {
             this.audioController.playSingleNote(id, noteIndex)
         }
