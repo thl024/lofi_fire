@@ -9,6 +9,8 @@ export const TOGGLE_PIANO_ROLL_NOTE = "pianoroll/toggle";
 export const ON_PLAY_BEAT = "onplay/beat";
 
 export const RESET = "reset";
+export const LOADING = "loading";
+export const INDIV_LOADING = "indiv_loading";
 /**
  * Playback Actions
  */
@@ -64,4 +66,14 @@ export const onPlayBeat = content => ({
 export const reset = content => ({
     type: RESET,
     payload: null
+})
+
+export const setLoading = content => ({
+    type: LOADING,
+    payload: content
+})
+
+export const setIndividualLoading = content => ({
+    type: INDIV_LOADING,
+    payload: content
 })

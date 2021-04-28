@@ -1,5 +1,5 @@
 import './App.css';
-import {Daw} from "./components/daw/Daw";
+import Daw from "./components/daw/Daw";
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {MainController} from "./controllers/main_controller";
@@ -23,9 +23,39 @@ function App() {
             if (pid !== null && pid !== undefined) {
                 // API call to return project state
                 return getProjectState(pid).catch(err=>{
-                    console.log("Error retrieving project state: " + err);
                     setRedirect(true);
                 }).then(res=>{ // Seed project state if success
+
+                    // TODO convert some data
+                    // let instruments = [];
+                    //
+                    // let dat = res.instruments[0].data;
+                    // let poo = dat.map(i=> i.map(j => Number(j)));
+                    // console.log(dat)
+                    // console.log(poo)
+                    // console.log(typeof dat[0][0])
+                    // console.log(typeof poo[0][0])
+
+                    // res.instruments.forEach(inst => {
+                    //     let dat = []
+                    //     inst.data.forEach((row) => {
+                    //         row.forEach((val) => {
+                    //
+                    //         })
+                    //     })
+                    //
+                    //     instruments.push({
+                    //         name: inst.name,
+                    //         id: inst.id,
+                    //         color: inst.color,
+                    //         data:
+                    //     })
+                    // })
+
+                    // let converted = {
+                    //     instruments: instruments
+                    // }
+
                     setProjectState(res);
                 })
             } else { // No project ID, seed initial instruments

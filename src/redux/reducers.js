@@ -1,7 +1,7 @@
 // Setup initial state
 import {
     ADD_INSTRUMENT,
-    CHANGE_BPM, DELETE_INSTRUMENT, EDIT_INSTRUMENT,
+    CHANGE_BPM, DELETE_INSTRUMENT, EDIT_INSTRUMENT, INDIV_LOADING, LOADING,
     ON_PLAY_BEAT,
     REFRESH_INSTRUMENT,
     RESET,
@@ -15,6 +15,8 @@ const initialState = {
     bpm: 80,
     selectedIndex: 0,
     playIndex: -1,
+    loading: false,
+    indivLoading: false,
 
     // Instrument objects are split into many fields to allow for different components to access different fields
     // This reduces potential lag from over re-rendering
@@ -38,6 +40,8 @@ export default function appReducer(state = initialState, action) {
             ids = [...state.ids, action.payload.id]
             names = [...state.names, action.payload.name]
             data = [...state.data, action.payload.data]
+
+            console.log(data);
             colors = [...state.colors, action.payload.color]
 
             return {
@@ -72,14 +76,6 @@ export default function appReducer(state = initialState, action) {
             names.splice(action.payload, 1);
             data.splice(action.payload, 1);
             colors.splice(action.payload, 1);
-
-            console.log({
-                ...state,
-                ids: ids,
-                names: names,
-                data: data,
-                colors: colors
-            })
 
             return {
                 ...state,
@@ -140,9 +136,6 @@ export default function appReducer(state = initialState, action) {
             return {
                 ...state,
                 data: data
-                // instruments: state.instruments.map(
-                //     (el, index) => index === state.selectedIndex? { ...el, data: newData }: el
-                // )
             }
 
         case ON_PLAY_BEAT:
@@ -156,6 +149,18 @@ export default function appReducer(state = initialState, action) {
          */
         case RESET:
             return initialState
+
+        case LOADING:
+            return {
+                ...state,
+                loading: action.payload
+            }
+
+        case INDIV_LOADING:
+            return {
+                ...state,
+                indivLoading: action.payload
+            }
 
         default:
             return state;

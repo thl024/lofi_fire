@@ -4,7 +4,15 @@ import {ALL_KEYS, defaultColorChoices} from "../utils/constants";
 import {audio_metadata} from "./audio_metadata";
 import {v4 as uuidv4} from "uuid";
 import {generatePayload, initializeEmptyData} from "../utils/utils";
-import {addInstrument, deleteInstrument, editInstrument, onPlayBeat, reset, selectInstrument} from "../redux/actions";
+import {
+    addInstrument,
+    deleteInstrument,
+    editInstrument,
+    onPlayBeat,
+    reset,
+    selectInstrument, setIndividualLoading,
+    setLoading
+} from "../redux/actions";
 import {store} from "../redux/stores"
 import {saveProjectState} from "../utils/network";
 
@@ -24,16 +32,21 @@ export class MainController {
         this.onEditInstrument = this.onEditInstrument.bind(this);
         this.onDeleteInstrument = this.onDeleteInstrument.bind(this);
         this.notifySingleNote = this.notifySingleNote.bind(this);
+
+        this.numInstrumentsToLoad = 0;
+        this.numInstrumentsLoaded = 0;
     }
 
     seedInstruments(projectData) {
+        store.dispatch(setLoading(true));
+
         // No project id
         if (projectData === null) {
             this.onCreateInstrument(Object.keys(audio_metadata)[0], defaultColorChoices[0]);
         } else { // Project id included
             // Project details
             projectData.instruments.forEach((inst) => {
-                this.onCreateInstrumentWithData(inst.name, inst.color, inst.data, inst.id);
+                this.onCreateInstrumentWithData(inst.name, inst.color, inst.data[0], inst.id);
             })
         }
     }
@@ -44,6 +57,9 @@ export class MainController {
     }
 
     onCreateInstrumentWithData(instrumentName, instrumentColor, data, id) {
+        this.numInstrumentsToLoad += 1;
+        store.dispatch(setIndividualLoading(true));
+
         let newInstrument = {
             id: id,
             name: instrumentName,
@@ -55,10 +71,20 @@ export class MainController {
         this.audioController.loadInstrument(newInstrument, (err) => {
             if (err) {
                 console.log("Failed to load instrument: " + instrumentName + "; " + err.toString());
-                return;
+            } else {
+                // Notify redux of new instrument
+                store.dispatch(addInstrument(newInstrument))
             }
-            // Notify redux of new instrument
-            store.dispatch(addInstrument(newInstrument))
+
+            // Handle callbacks for loading
+            this.numInstrumentsLoaded += 1;
+            if (this.numInstrumentsLoaded === this.numInstrumentsToLoad) {
+                console.log(store.getState())
+
+                // Update redux with loading
+                store.dispatch(setLoading(false));
+                // store.dispatch(setIndividualLoading(false));
+            }
         });
     }
 
@@ -162,20 +188,34 @@ export class MainController {
 
     export(callback, err_callback) {
         let state = store.getState();
-        let projectPayload = {
-            pid: this.pid,
-            names: state.names,
-            data: state.data,
-            ids: state.ids,
-            colors: state.colors,
+        let instruments = []
+        for (let i = 0; i < state.names.length; i++) {
+            instruments.push({
+                name: state.names[i],
+                data: state.data[i],
+                id: state.ids[i],
+                color: state.colors[i],
+            })
         }
 
-        saveProjectState(generatePayload(projectPayload), (res) => {
-            // callback(res.pid);
+
+        let projectPayload = {
+            pid: this.pid,
+            instruments: instruments,
+        }
+
+        saveProjectState(projectPayload).then((res) => {
             console.log(res);
-        }, (err) =>  {
-            // err_callback(err)
-            console.log(err)
-        });
+        }).catch((err) => {
+            console.log(err);
+        })
+
+        // saveProjectState(generatePayload(projectPayload), (res) => {
+        //     // callback(res.pid);
+        //     console.log(res);
+        // }, (err) =>  {
+        //     // err_callback(err)
+        //     console.log(err)
+        // });
     }
 }

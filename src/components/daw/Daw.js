@@ -3,10 +3,16 @@ import {ControlBar} from "./control_bar/ControlBar";
 import InstrumentPicker from "./instrument_list/InstrumentList";
 import PianoRoll from "./piano_roll/PianoRoll";
 import './Daw.css';
+import {connect} from "react-redux";
 
-export class Daw extends React.Component {
+class Daw extends React.Component {
     render() {
         console.log("Rerender DAW");
+
+        if (this.props.loading) {
+            return <h1>Loading</h1>
+        }
+
         let pianoRollSection = <div className="playlist-wrapper">
             <InstrumentPicker
                 onCreateInstrument={this.props.onCreateInstrument}
@@ -27,3 +33,11 @@ export class Daw extends React.Component {
         </div>
     }
 }
+
+// Redux connection
+export default connect(
+    (state) => {
+        return {
+            loading: state.loading,
+        }}
+)(Daw)
