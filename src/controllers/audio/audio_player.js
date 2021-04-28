@@ -134,6 +134,27 @@ export class AudioPlayer {
         let buffer, source;
         switch (this.typeMap[id]) {
             case "sfx":
+
+                if (id in this.currentlyPlayingAudio) {
+                    return;
+                }
+
+                // Retrieve sample buffer
+                buffer = this.preloadedAudio[id].buffer;
+
+                // Recreate new sample
+                source = this.audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.connect(this.audioCtx.destination);
+                source.loop = true;
+
+                // Save original sample if it exists
+                this.currentlyPlayingAudio[id] = source;
+
+                // Start playing
+                source.start(0);
+                break;
+
             case "perc":
                 // Retrieve sample buffer
                 buffer = this.preloadedAudio[id].buffer;
@@ -150,6 +171,7 @@ export class AudioPlayer {
 
                 // End source if finished playing
                 source.onended = () => {
+                    console.log("onended")
                     delete this.currentlyPlayingAudio[id];
                 }
 
@@ -227,15 +249,10 @@ export class AudioPlayer {
                 case "sfx":
                 case "perc":
                 case "toned":
+                    console.log(notes);
                     notes.stop();
                     delete this.currentlyPlayingAudio[id];
                     break;
-                // case "toned":
-                //     for (const [, note] of Object.entries(notes)) {
-                //         note.stop();
-                //         delete this.currentlyPlayingAudio[id + note];
-                //     }
-                //     break;
                 default:
                     break;
             }

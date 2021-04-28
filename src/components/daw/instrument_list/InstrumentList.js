@@ -77,6 +77,16 @@ class InstrumentList extends React.Component {
     render() {
         console.log("Rerender Instrument List");
 
+        let modal = <div />
+        if (this.state.addModalOpen) {
+            modal = <InstrumentModal
+                open={this.state.addModalOpen}
+                onClose={this.closeAddModal}
+                action="Add"
+                actionIcon={<AddIcon />}
+                onNotifyInstrumentChange={this.props.onCreateInstrument} />;
+        }
+
         return <div css={instrumentListWrapperStyle}>
                 <ul css={instrumentListStyle}>
                     <InstrumentListHeader openAddModal={this.openAddModal}/>
@@ -95,14 +105,7 @@ class InstrumentList extends React.Component {
                         })}
                     </div>
                 </ul>
-
-            <InstrumentModal
-                open={this.state.addModalOpen}
-                onClose={this.closeAddModal}
-                action="Add"
-                actionIcon={<AddIcon />}
-                color={audio_metadata[Object.keys(audio_metadata)[0]].color}
-                onNotifyInstrumentChange={this.props.onCreateInstrument} />
+            {modal}
         </div>
     }
 }

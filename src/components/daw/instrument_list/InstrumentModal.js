@@ -11,6 +11,7 @@ import {SelectColorPage} from "../form_page/SelectColorPage";
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import CloseIcon from '@material-ui/icons/Close';
 import {ArrowRightAlt} from "@material-ui/icons";
+import {defaultColorChoices} from "../../../utils/constants";
 
 const modalTitleStyle = css`
   text-align: center;
@@ -61,7 +62,6 @@ export class InstrumentModal extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.state = this.getInitialState();
 
         this.onValueSelected = this.onValueSelected.bind(this);
@@ -73,10 +73,16 @@ export class InstrumentModal extends React.Component {
     }
 
     getInitialState() {
+        let defaultInstrumentName = Object.keys(audio_metadata)[0];
+        let defaultInstrument =  audio_metadata[Object.keys(audio_metadata)[0]];
+
         return {
-            instrument: this.props.name,
-            color: this.props.color,
-            type: this.searchForInstrumentType(this.props.name),
+            // Track actual saved values
+            instrument: (this.props.name === null) ? defaultInstrumentName : this.props.name,
+            color: (this.props.color === null) ? defaultColorChoices[0] : this.props.color,
+            type: (this.props.name === null) ? defaultInstrument.instType : this.searchForInstrumentType(this.props.name),
+
+            // Page counter
             pageIndex: 0
         }
     }
@@ -89,7 +95,8 @@ export class InstrumentModal extends React.Component {
                     return {
                         ...state,
                         type: val.target.value,
-                        instrument: (val.target.value !== this.state.type) ? null : this.state.instrument,
+                        instrument: (val.target.value !== this.state.type || this.state.instrument === null) ?
+                            this.getInstrumentsWithType(val.target.value)[0] : this.state.instrument,
                     }
                 })
                 break;
@@ -119,12 +126,14 @@ export class InstrumentModal extends React.Component {
             return "toned";
         }
 
+        let type = "toned";
         Object.keys(audio_metadata).forEach(function(key) {
             if (key === name) {
-                return audio_metadata[key].instType;
+                type = audio_metadata[key].instType;
             }
         });
-        return "toned";
+
+        return type;
     }
 
     getInstrumentsWithType(type) {
@@ -157,6 +166,31 @@ export class InstrumentModal extends React.Component {
     }
 
     onNext() {
+        // Data validation
+        switch (this.state.pageIndex) {
+            case 0:
+                if (this.state.type === null) {
+
+                    // TODO - popup
+                    return;
+                }
+                break;
+            case 1:
+                if (this.state.instrument === null) {
+                    // TODO - popup
+                    return;
+                }
+                break;
+            case 2:
+                if (this.state.color === null) {
+                    // TODO - popup
+                    return;
+                }
+                break;
+            default:
+                return;
+        }
+
         // TODO animate stepper
         if (this.state.pageIndex < 2) {
             this.setState((state) => {
@@ -211,16 +245,10 @@ export class InstrumentModal extends React.Component {
             case 1:
                 let instruments = this.getInstrumentsWithType(this.state.type);
 
-                // If no instrument is set, default to first instrument with type
-                let instrument = this.state.instrument;
-                if (instrument === null || instrument === undefined) {
-                    instrument = instruments[0];
-                }
-
                 // Generate select val page
                 page = <SelectValuePage
                     onValueSelected={this.onValueSelected}
-                    value={instrument}
+                    value={this.state.instrument}
                     values={instruments}
                     titles={instruments}
                     helperText="Select an instrument"

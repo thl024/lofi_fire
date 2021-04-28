@@ -95,6 +95,18 @@ export class InstrumentListRow extends React.Component {
             instrumentText = "> " + this.props.instrument
         }
 
+        let modal = <div />;
+        if (this.state.editModalOpen) {
+            modal = <InstrumentModal
+                open={this.state.editModalOpen}
+                name={this.props.instrument}
+                color={this.props.color}
+                action="Edit"
+                actionIcon={<EditIcon />}
+                onClose={this.closeEditModal}
+                onNotifyInstrumentChange={this.onEditInstrumentFinish} />;
+        }
+
         return <div style={{backgroundColor: this.props.color}}
                     css={instrumentRowWrapperStyle} onClick={this.onSelectWithFilter}>
             <p css={instrumentTextStyle}>{instrumentText}</p>
@@ -102,14 +114,7 @@ export class InstrumentListRow extends React.Component {
             <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="edit" onClick={this.onEditModalPopup} />
             <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="delete" onClick={this.onDeleteWithIndex} />
 
-            <InstrumentModal
-                open={this.state.editModalOpen}
-                name={this.props.instrument}
-                color={this.props.color}
-                action="Edit"
-                actionIcon={<EditIcon />}
-                onClose={this.closeEditModal}
-                onNotifyInstrumentChange={this.onEditInstrumentFinish} />
+            {modal}
         </div>
     }
 }

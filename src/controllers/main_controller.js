@@ -149,10 +149,10 @@ export class MainController {
     }
 
     refresh() {
-        // let state = store.getState();
-        // state.ids.forEach((id => {
-        //     this.audioController.unloadInstrument(id)
-        // }));
+        let state = store.getState();
+        state.ids.forEach((id => {
+            this.audioController.unloadInstrument(id)
+        }));
 
         this.clear();
 
