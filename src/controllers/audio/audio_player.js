@@ -171,7 +171,6 @@ export class AudioPlayer {
 
                 // End source if finished playing
                 source.onended = () => {
-                    console.log("onended")
                     delete this.currentlyPlayingAudio[id];
                 }
 
