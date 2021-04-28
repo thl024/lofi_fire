@@ -25,6 +25,16 @@ export function initializeAudioMetadata() {
     });
 }
 
+export function getFirstInstrumentWithType(type) {
+    for (let id in audio_metadata) {
+        if (audio_metadata[id].instType === type) {
+            return id;
+        }
+    }
+
+    return null;
+}
+
 // export const audio_metadata = {
 //     "Grand Piano": {
 //         "src": BASE_SOUND_RESOURCE_URL + "acoustic_grand_piano/",

@@ -66,10 +66,10 @@ class PianoRollItem extends React.Component {
           /*  CSS Properties  */
           border-right: solid 1px #BDBDBD;
           background-color: ${color};
-          &:nth-child(1)  {
+          &:nth-of-type(1)  {
             border-left: solid 2px #BDBDBD
           }
-          &:nth-child(4n) {
+          &:nth-of-type(4n) {
              border-right: solid 2px #BDBDBD;
           }
           &:hover {

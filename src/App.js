@@ -1,13 +1,11 @@
 import './App.css';
 import {Daw} from "./components/daw/Daw";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {MainController} from "./controllers/main_controller";
 import { Redirect } from "react-router-dom";
 import {getProjectState} from "./utils/network";
 import {initializeAudioMetadata} from "./controllers/audio_metadata";
-
-let rendered = false;
 
 function App() {
     // Retrieve URL param for project id
@@ -47,24 +45,7 @@ function App() {
     // Manage data flow & audio
     console.log("Init main controller");
     let controller = new MainController(pid);
-
-    // if (rendered) { // Odd bug occurs where rerendering happens twice even when state does not change
-    //     return (<div className="App">
-    //             <h2 className={"title"}>Muselab</h2>
-    //             <Daw onCreateInstrument={controller.onCreateInstrument}
-    //                  onEditInstrument={controller.onEditInstrument}
-    //                  onDeleteInstrument={controller.onDeleteInstrument}
-    //                  updateBPM={controller.updateBPM}
-    //                  notifySingleNote={controller.notifySingleNote}
-    //                  play={controller.play}
-    //                  stop={controller.stop}
-    //                  refresh={controller.refresh}
-    //                  export={controller.export}
-    //             />
-    //             <footer className="page-footer footer" />
-    //         </div>
-    //     );
-    // }
+    controller.clear();
 
     try {
         if (projectState === -1) {
@@ -76,7 +57,6 @@ function App() {
         return <div />
     }
 
-    rendered = true;
     console.log("Loaded main controller");
     return (<div className="App">
             <h2 className={"title"}>Muselab</h2>

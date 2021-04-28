@@ -23,7 +23,7 @@ export class PianoRollHeader extends React.Component {
 
         let first_row = [];
         for (let i = 0; i < NUM_MEASURES*4; i++) {
-            first_row.push(<PianoRollHeaderCell i={i} />)
+            first_row.push(<PianoRollHeaderCell i={i} key={i} />)
         }
 
         return <div css={pianoRollRowHeaderWrapperStyle} key="header_row">{first_row}</div>

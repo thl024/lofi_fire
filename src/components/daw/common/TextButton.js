@@ -18,16 +18,9 @@ export class TextButton extends React.Component {
         `
         // JSX
         return <Button css={style} onClick={this.props.onClick}
-                       variant="contained" href="#contained-buttons"
+                       variant="contained"
                        startIcon={this.props.icon}>
             {this.props.text}
         </Button>
-
-
-        // <button
-        //                className="btn-floating btn-large waves-effect waves-light button-wrapper"
-        //                >
-        //
-        // </button>
     }
 }

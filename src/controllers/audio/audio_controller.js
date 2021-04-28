@@ -11,7 +11,7 @@ export class AudioController {
     }
 
     loadInstrument(instrument, callback) {
-        this.audioPlayer.loadSoundLibrary(instrument.id, instrument.name, this.allNotes, callback)
+        this.audioPlayer.loadSoundLibrary(instrument.id, instrument.name, callback)
     }
 
     unloadInstrument(id) {

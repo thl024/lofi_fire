@@ -15,7 +15,8 @@ export class SelectValuePage extends React.Component {
     render() {
         let items = [];
         for (let i = 0; i < this.props.values.length; i++) {
-            items.push(<MenuItem value={this.props.values[i]}>{this.props.titles[i]}</MenuItem>)
+            items.push(<MenuItem key={this.props.values[i]}
+                                 value={this.props.values[i]}>{this.props.titles[i]}</MenuItem>);
         }
 
         return <div css={formWrapperStyle}>

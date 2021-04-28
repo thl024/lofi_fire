@@ -101,7 +101,6 @@ class InstrumentList extends React.Component {
                 onClose={this.closeAddModal}
                 action="Add"
                 actionIcon={<AddIcon />}
-                name={Object.keys(audio_metadata)[0]}
                 color={audio_metadata[Object.keys(audio_metadata)[0]].color}
                 onNotifyInstrumentChange={this.props.onCreateInstrument} />
         </div>

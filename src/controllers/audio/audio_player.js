@@ -5,7 +5,12 @@ import {_base64ToArrayBuffer} from "../../utils/utils";
 export class AudioPlayer {
 
     constructor() {
+        // Tracks audio buffers
         this.preloadedAudio = {};
+
+        // Tracks currently playing audio nodes
+        this.currentlyPlayingAudio = {};
+
         this.typeMap = {};
 
         // Play state contains currentTimer, current delay, and current sequence
@@ -16,25 +21,23 @@ export class AudioPlayer {
         };
 
         this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        // this.loadSingleSampleSoundLibrary = this.loadSingleSampleSoundLibrary.bind(this);
     }
 
     // Loads all named notes for a particular instrument
-    loadSoundLibrary(id, instrumentName, notes, callback) {
+    loadSoundLibrary(id, instrumentName, callback) {
         if (id in this.preloadedAudio) { // Instrument already loaded
             callback(null);
             return;
         }
 
         let instrumentRefID = audio_metadata[instrumentName].id;
-        const thisRef = this;
 
         // Network call to get audio data
         getAudio(instrumentRefID).then(res => {
             switch (res.type) {
-                case "toned": thisRef.loadNotedSoundLibrary(id, res.buffers, callback); break;
+                case "toned": this.loadNotedSoundLibrary(id, res.buffers, callback); break;
                 case "perc":
-                case "sfx": thisRef.loadSingleSampleSoundLibrary(id, res.buffer, res.type, callback); break;
+                case "sfx": this.loadSingleSampleSoundLibrary(id, res.buffer, res.type, callback); break;
                 default: callback(Error("Instrument Type does not exist")); break;
             }
         }).catch(err => {
@@ -42,49 +45,56 @@ export class AudioPlayer {
         });
     }
 
-    loadNotedSoundLibrary(id, buffers) {
+    loadNotedSoundLibrary(id, buffers, callback) {
         // Begin loading each note
-        // let noteMap = {};
-        // let notesLoaded = 0;
-        // let totalNoteCount = notes.length;
-        // let errorOccured = false;
-        // let preloadedAudio = this.preloadedAudio;
-        // let typeMap = this.typeMap;
-        //
-        // // Load all notes for given library
-        // notes.forEach(namedNote => {
-        //     console.log(src + namedNote + "." +  fileType);
-        //     let sound = new Howl({
-        //         src: [src + namedNote + "." +  fileType],
-        //         onload: () => {
-        //             if (errorOccured) {
-        //                 return;
-        //             }
-        //
-        //             noteMap[namedNote] = sound;
-        //             notesLoaded += 1;
-        //
-        //             if (totalNoteCount === notesLoaded) {
-        //                 preloadedAudio[id] = noteMap;
-        //                 typeMap[id] = "toned";
-        //                 callback(null)
-        //             }
-        //         },
-        //         onloaderror: (howlId, err) => {
-        //             if (!errorOccured) { // Process error
-        //                 callback(err)
-        //                 errorOccured = true;
-        //             }
-        //         }
-        //     });
-        // });
+        let noteMap = {};
+        let notesLoaded = 0;
+        let totalNoteCount = buffers.length;
+        let errorOccured = false;
+        let preloadedAudio = this.preloadedAudio;
+        let typeMap = this.typeMap;
+
+        // Load all notes for given library
+        buffers.forEach(bufferData => {
+            let source = this.audioCtx.createBufferSource();
+            let decoded = _base64ToArrayBuffer(bufferData.buffer);
+
+            // Decode audio data from downloaded sound buffer
+            this.audioCtx.decodeAudioData(decoded, buffer => {
+                source.buffer = buffer;
+                source.connect(this.audioCtx.destination);
+            }, err => {
+                throw Error("Error with decoding audio data");
+            }).then(_ => {
+                    if (errorOccured) {
+                        return;
+                    }
+                    noteMap[bufferData.note] = source;
+                    notesLoaded += 1;
+
+                    if (totalNoteCount === notesLoaded) {
+                        preloadedAudio[id] = noteMap;
+                        typeMap[id] = "toned";
+                        callback(null)
+                    }
+                }
+            ).catch(e => {
+                if (!errorOccured) {
+                    delete this.preloadedAudio[id];
+                    delete this.typeMap[id];
+                    errorOccured = true;
+                    callback(e);
+                }
+            })
+        });
     }
 
+    // TODO cache loaded instruments
     loadSingleSampleSoundLibrary(id, buffer, type, callback) {
         let source = this.audioCtx.createBufferSource();
         let decoded = _base64ToArrayBuffer(buffer);
 
-        // Create an empty three-second stereo buffer at the sample rate of the AudioContext
+        // Decode audio data from downloaded sound buffer
         this.audioCtx.decodeAudioData(decoded, buffer => {
             source.buffer = buffer;
             source.connect(this.audioCtx.destination);
@@ -102,6 +112,7 @@ export class AudioPlayer {
 
     unloadSoundLibrary(id) {
         delete this.preloadedAudio[id];
+        this.currentlyPlayingAudio = {};
         delete this.typeMap[id];
     }
 
@@ -120,23 +131,61 @@ export class AudioPlayer {
     }
 
     playSample(id, note, ind) {
-        let sample;
+        let buffer, source;
         switch (this.typeMap[id]) {
-            case "perc":
-                sample = this.preloadedAudio[id];
-                sample.start(0);
-                break;
-            case "toned":
-                sample = this.preloadedAudio[id][note];
-                sample.play();
-                break;
             case "sfx":
-                sample = this.preloadedAudio[id];
-                if (ind === 0) {
-                    sample.stop();
-                    sample.play();
+            case "perc":
+                // Retrieve sample buffer
+                buffer = this.preloadedAudio[id].buffer;
+
+                // Stop original sample if it exists
+                if (this.currentlyPlayingAudio[id] != null) {
+                    this.currentlyPlayingAudio[id].stop();
                 }
+
+                // Recreate new sample
+                source = this.audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.connect(this.audioCtx.destination);
+
+                // End source if finished playing
+                source.onended = () => {
+                    delete this.currentlyPlayingAudio[id];
+                }
+
+                // Save original sample if it exists
+                this.currentlyPlayingAudio[id] = source;
+
+                // Start playing
+                source.start(0);
                 break;
+
+            case "toned":
+                // Retrieve sample buffer
+                buffer = this.preloadedAudio[id][note].buffer;
+
+                // Stop original sample if it exists
+                if (this.currentlyPlayingAudio[id + note] != null) {
+                    this.currentlyPlayingAudio[id + note].stop();
+                }
+
+                // Recreate new sample
+                source = this.audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.connect(this.audioCtx.destination);
+
+                // End source if finished playing
+                source.onended = () => {
+                    delete this.currentlyPlayingAudio[id + note];
+                }
+
+                // Save original sample if it exists
+                this.currentlyPlayingAudio[id + note] = source;
+
+                // Start playing
+                source.start(0);
+                break;
+
             default:
                 break;
         }
@@ -173,19 +222,20 @@ export class AudioPlayer {
             this.playState.currentTimer = null;
         }
 
-        for (const [id, notes] of  Object.entries(this.preloadedAudio)) {
+        for (const [id, notes] of  Object.entries(this.currentlyPlayingAudio)) {
             switch (this.typeMap[id]) {
-                case "perc":
-                    notes.stop();
-                    break;
-                case "toned":
-                    for (const [, note] of Object.entries(notes)) {
-                        note.stop();
-                    }
-                    break;
                 case "sfx":
+                case "perc":
+                case "toned":
                     notes.stop();
+                    delete this.currentlyPlayingAudio[id];
                     break;
+                // case "toned":
+                //     for (const [, note] of Object.entries(notes)) {
+                //         note.stop();
+                //         delete this.currentlyPlayingAudio[id + note];
+                //     }
+                //     break;
                 default:
                     break;
             }

@@ -88,7 +88,8 @@ export class InstrumentModal extends React.Component {
                 this.setState((state) => {
                     return {
                         ...state,
-                        type: val.target.value
+                        type: val.target.value,
+                        instrument: (val.target.value !== this.state.type) ? null : this.state.instrument,
                     }
                 })
                 break;
@@ -209,9 +210,17 @@ export class InstrumentModal extends React.Component {
                 break;
             case 1:
                 let instruments = this.getInstrumentsWithType(this.state.type);
+
+                // If no instrument is set, default to first instrument with type
+                let instrument = this.state.instrument;
+                if (instrument === null || instrument === undefined) {
+                    instrument = instruments[0];
+                }
+
+                // Generate select val page
                 page = <SelectValuePage
                     onValueSelected={this.onValueSelected}
-                    value={this.state.instrument}
+                    value={instrument}
                     values={instruments}
                     titles={instruments}
                     helperText="Select an instrument"
