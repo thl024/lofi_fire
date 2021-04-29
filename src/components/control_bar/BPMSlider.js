@@ -5,22 +5,24 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css'
 import { jsx, css } from '@emotion/react'
 import { connect } from 'react-redux'
-import {changeBPM} from "../../../redux/actions";
-import {MAXIMUM_BPM, MINIMUM_BPM} from "../../../utils/constants";
+import {changeBPM} from "../../redux/actions";
+import {MAXIMUM_BPM, MINIMUM_BPM} from "../../utils/constants";
+import {mainThemeColor} from "../../styles/colors";
 
 // CSS
 const sliderDivStyle = css`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 `
 
 const bpmTextStyle = css`
   color: #FF9800;
   font-family: GillSans, Calibri, Trebuchet, sans-serif;
   font-size: medium;
-  width: 30px;
+  padding: 0 10px 0 10px;
+  min-width: 60px;
 `
 
 const bpmSliderStyle = css`
@@ -42,9 +44,9 @@ class BPMSlider extends React.Component {
         console.log("Rerender BPM Bar");
 
         // Slider color
-        let sliderColor = "#FF9800"
+        let sliderColor = mainThemeColor
         return <div css={sliderDivStyle}>
-            <p css={bpmTextStyle}>Tempo: </p>
+            <p css={bpmTextStyle}>Tempo (BPM)</p>
             <Slider
                 css={bpmSliderStyle}
                 defaultValue={this.props.bpm}

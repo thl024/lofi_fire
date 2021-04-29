@@ -15,7 +15,6 @@ export class IconCircleButton extends React.Component {
             background-color: ${this.props.hoverColor};
           }
         `
-        // JSX
         return <button onClick={this.props.onClick}
                        className="btn-floating btn-large waves-effect waves-light button-wrapper"
                        css={style}>

@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
 import {store} from "./redux/stores";
 import {Provider} from "react-redux";
+import {AppContainer} from "./AppContainer";
 
 function MuselabApp() {
     // return <React.StrictMode>
     return <Provider store={store}>
-        <App />
+        <AppContainer />
     </Provider>
         // </React.StrictMode>
 }

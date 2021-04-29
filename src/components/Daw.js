@@ -1,12 +1,27 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
 import React from 'react';
 import {ControlBar} from "./control_bar/ControlBar";
 import InstrumentPicker from "./instrument_list/InstrumentList";
 import PianoRoll from "./piano_roll/PianoRoll";
-import './Daw.css';
-import {connect} from "react-redux";
-import {ExportModal} from "./ExportModal";
+import {ExportModal} from "./modals/ExportModal";
+import LoadingBar from "./common/LoadingBar";
+import {jsx, css} from "@emotion/react";
+import {TitleLogo} from "./TitleLogo";
+import {mainThemeColor, mainThemeColorLight, secondaryTheme, tertiaryTheme} from "../styles/colors";
 
-class Daw extends React.Component {
+const playlistWrapperStyle = css`
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1000;
+`
+const mainAppStyle = css`
+  flex-grow: 15;
+  display: flex;
+  flex-direction: column;
+`
+
+export class Daw extends React.Component {
 
     constructor(props) {
         super(props);
@@ -46,12 +61,7 @@ class Daw extends React.Component {
     render() {
         console.log("Rerender DAW");
 
-        if (this.props.loading) {
-            return <h1>Loading</h1>
-        }
-
-        // TODO -- modal for export
-        let exportModal = <div />
+        let exportModal = <div/>
         if (this.state.exportModalOpen) {
             exportModal = <ExportModal
                 open={this.state.exportModalOpen}
@@ -60,32 +70,33 @@ class Daw extends React.Component {
             />
         }
 
-        let pianoRollSection = <div className="playlist-wrapper">
+        let topBarStyle = {
+            display: "flex",
+            flexDirection: "row",
+            backgroundColor: mainThemeColor,
+            // borderBottom: "solid 3px " + mainThemeColorLight
+        }
+
+        let pianoRollSection = <div css={playlistWrapperStyle}>
             <InstrumentPicker
                 onCreateInstrument={this.props.onCreateInstrument}
                 onEditInstrument={this.props.onEditInstrument}
-                onDeleteInstrument={this.props.onDeleteInstrument} />
-            <PianoRoll notifyNote={this.props.notifySingleNote} />
+                onDeleteInstrument={this.props.onDeleteInstrument}/>
+            <PianoRoll notifyNote={this.props.notifySingleNote}/>
         </div>
 
-        return <div className={"mainApp"} >
-            <ControlBar className={"controlBar"}
-                updateBPM={this.props.updateBPM}
-                play={this.props.play}
-                stop={this.props.stop}
-                refresh={this.props.refresh}
-                export={this.export} />
-            <br />
+        return <div css={mainAppStyle}>
+            <div css={topBarStyle}>
+                <TitleLogo />
+                <ControlBar updateBPM={this.props.updateBPM}
+                            play={this.props.play}
+                            stop={this.props.stop}
+                            refresh={this.props.refresh}
+                            export={this.export}/>
+                <LoadingBar/>
+            </div>
             {pianoRollSection}
             {exportModal}
         </div>
     }
 }
-
-// Redux connection
-export default connect(
-    (state) => {
-        return {
-            loading: state.loading,
-        }}
-)(Daw)

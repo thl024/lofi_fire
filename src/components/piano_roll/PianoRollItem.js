@@ -3,7 +3,7 @@
 import React from 'react';
 import { jsx, css } from '@emotion/react'
 import {connect} from "react-redux";
-import {onTogglePianoRollNote} from "../../../redux/actions";
+import {onTogglePianoRollNote} from "../../redux/actions";
 
 class PianoRollItem extends React.Component {
 
@@ -26,8 +26,11 @@ class PianoRollItem extends React.Component {
             }
 
             // color changes
-            if ((this.props.data[this.props.j][this.props.i] || nextProps.data[this.props.j][this.props.i]) &&
-                this.props.color !== nextProps.color) {
+            // if ((this.props.data[this.props.j][this.props.i] || nextProps.data[this.props.j][this.props.i]) &&
+            //     this.props.color !== nextProps.color) {
+            //     return true;
+            // }
+            if ((this.props.color !== nextProps.color)) {
                 return true;
             }
 
@@ -58,6 +61,8 @@ class PianoRollItem extends React.Component {
             color = this.props.color
         }
 
+        // else if (this.props.i)
+
         let pianoRollRowItemStyle = css`
           /*  Child flex grow property */
           flex-basis: 50px;
@@ -72,7 +77,8 @@ class PianoRollItem extends React.Component {
              border-right: solid 2px #BDBDBD;
           }
           &:hover {
-            background-color: #BDBDBD;
+            background-color: ${this.props.color};
+            opacity: 0.5;
           }
         `
 

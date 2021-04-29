@@ -3,15 +3,15 @@
 import React from 'react';
 import {jsx, css} from '@emotion/react'
 import {Modal, Step, StepLabel, Stepper} from "@material-ui/core";
-import {audio_metadata} from "../../../controllers/audio_metadata";
+import {audio_metadata} from "../../controllers/audio_metadata";
 import {TextButton} from "../common/TextButton";
-import {addColor, addColorHighlight, closeColor, closeColorHighlight,} from "../../../themes/colors";
-import {SelectValuePage} from "../form_page/SelectValuePage";
-import {SelectColorPage} from "../form_page/SelectColorPage";
+import {addColor, addColorHighlight, closeColor, closeColorHighlight,} from "../../styles/colors";
+import {SelectValuePage} from "../forms/SelectValuePage";
+import {SelectColorPage} from "../forms/SelectColorPage";
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import CloseIcon from '@material-ui/icons/Close';
 import {ArrowRightAlt} from "@material-ui/icons";
-import {defaultColorChoices} from "../../../utils/constants";
+import {DEFAULT_COLORS} from "../../utils/constants";
 
 const modalTitleStyle = css`
   text-align: center;
@@ -79,7 +79,7 @@ export class InstrumentModal extends React.Component {
         return {
             // Track actual saved values
             instrument: (this.props.name === null) ? defaultInstrumentName : this.props.name,
-            color: (this.props.color === null) ? defaultColorChoices[0] : this.props.color,
+            color: (this.props.color === null) ? DEFAULT_COLORS[0] : this.props.color,
             type: (this.props.name === null) ? defaultInstrument.instType : this.searchForInstrumentType(this.props.name),
 
             // Page counter

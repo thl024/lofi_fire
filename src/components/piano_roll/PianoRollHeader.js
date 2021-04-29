@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/react'
-import {NUM_MEASURES} from "../../../utils/constants";
+import {NUM_MEASURES} from "../../utils/constants";
 import PianoRollHeaderCell from "./PianoRollHeaderCell";
 
 const pianoRollRowHeaderWrapperStyle = css`
@@ -15,6 +15,8 @@ const pianoRollRowHeaderWrapperStyle = css`
 
   /*  CSS Properties  */
   border-bottom: solid 1px #BDBDBD;
+  
+  height: 50px;
 `
 
 export class PianoRollHeader extends React.Component {

@@ -7,22 +7,23 @@ import {connect} from "react-redux";
 import {
     refreshInstrument,
     selectInstrument
-} from "../../../redux/actions";
-import {InstrumentModal} from "./InstrumentModal";
-import {audio_metadata} from "../../../controllers/audio_metadata";
+} from "../../redux/actions";
+import {InstrumentModal} from "../modals/InstrumentModal";
 import AddIcon from "@material-ui/icons/Add";
 import {InstrumentListHeader} from "./InstrumentListHeader";
 
 const instrumentListWrapperStyle = css`
-  flex-grow: 0.5;
+  //flex-grow: 0.5;
   
-  border-bottom: solid 2px #757575;
-  border-top: solid 2px #757575;
+  //border-bottom: solid 2px #757575;
+  //border-top: solid 2px #757575;
 
   /* Flexbox */
   display:flex;
   flex-basis: 300px;
   flex-direction: column;
+  
+  //background-color: #ffd3b4;
 `
 
 const instrumentListStyle = css`

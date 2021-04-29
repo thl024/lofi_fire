@@ -2,11 +2,11 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/react'
-import {ALL_KEYS, NUM_MEASURES} from "../../../utils/constants";
+import {ALL_KEYS, NUM_MEASURES} from "../../utils/constants";
 import {PianoRollHeader} from "./PianoRollHeader";
 import PianoRollItem from "./PianoRollItem";
 import {connect} from "react-redux";
-import {audio_metadata} from "../../../controllers/audio_metadata";
+import {audio_metadata} from "../../controllers/audio_metadata";
 
 const pianoRollWrapperStyle = css`
   /*  Child flex grow property */

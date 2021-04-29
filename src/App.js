@@ -1,77 +1,43 @@
-import './App.css';
-import Daw from "./components/daw/Daw";
-import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
-import {MainController} from "./controllers/main_controller";
-import { Redirect } from "react-router-dom";
-import {getProjectState} from "./utils/network";
-import {initializeAudioMetadata} from "./controllers/audio_metadata";
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import {Daw} from "./components/Daw";
+import { jsx } from '@emotion/react'
+import {connect} from "react-redux";
+import {LoadingPage} from "./components/common/LoadingPage";
+import {mainThemeColor} from "./styles/colors";
 
-function App() {
-    // Retrieve URL param for project id
-    let { pid } = useParams();
-    let [redirect, setRedirect] = useState(false);
-    let [projectState, setProjectState] = useState(null);
-
-    // Controller initialization and seeding initial project data
-    useEffect(() => {
-        // API call to retrieve audio metadata
-        initializeAudioMetadata().catch(err=> {
-            console.log("Error initializing audio metadata: " + err);
-        }).then(() => {
-            // Call for project state if pid exists
-            if (pid !== null && pid !== undefined) {
-                // API call to return project state
-                return getProjectState(pid).catch(err=>{
-                    setRedirect(true);
-                }).then(res=>{ // Seed project state if success
-                    setProjectState(res);
-                })
-            } else { // No project ID, seed initial instruments
-                setProjectState(-1);
-            }
-        }).catch((err) => {
-            console.log("Error during initialization: " + err);
-        })
-    }, [pid]);
-
-    if (redirect) {
-        return <Redirect to="/" />
-    } else if (projectState === null) {
-        return <div />
+// App presentational component
+function App(props) {
+    if (props.loading) {
+        return <LoadingPage isNewProject={props.isNewProject} />
     }
 
-    // Manage data flow & audio
-    console.log("Init main controller");
-    let controller = new MainController(pid);
-    controller.clear();
-
-    try {
-        if (projectState === -1) {
-            controller.seedInstruments(null);
-        } else {
-            controller.seedInstruments(projectState)
-        }
-    } catch (e) {
-        return <div />
+    let appStyle = {
+        textAlign: "center",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
     }
 
-    console.log("Loaded main controller");
-    return (<div className="App">
-            <h2 className={"title"}>Muselab</h2>
-            <Daw onCreateInstrument={controller.onCreateInstrument}
-                 onEditInstrument={controller.onEditInstrument}
-                 onDeleteInstrument={controller.onDeleteInstrument}
-                 updateBPM={controller.updateBPM}
-                 notifySingleNote={controller.notifySingleNote}
-                 play={controller.play}
-                 stop={controller.stop}
-                 refresh={controller.refresh}
-                 export={controller.export}
+    return (<div css={appStyle}>
+            <Daw onCreateInstrument={props.onCreateInstrument}
+                 onEditInstrument={props.onEditInstrument}
+                 onDeleteInstrument={props.onDeleteInstrument}
+                 updateBPM={props.updateBPM}
+                 notifySingleNote={props.notifySingleNote}
+                 play={props.play}
+                 stop={props.stop}
+                 refresh={props.refresh}
+                 export={props.export}
             />
-            <footer className="page-footer footer" />
         </div>
     );
 }
 
-export default App;
+// Redux to retrieving loading state, avoiding in parent container due to intensive loading
+export default connect(
+    (state) => {
+        return {
+            loading: state.loading,
+        }}
+)(App)

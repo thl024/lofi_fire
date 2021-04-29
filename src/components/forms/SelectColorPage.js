@@ -3,7 +3,7 @@
 import React from 'react';
 import { jsx, css } from '@emotion/react'
 import {CirclePicker} from "react-color";
-import {defaultColorChoices} from "../../../utils/constants";
+import {DEFAULT_COLORS} from "../../utils/constants";
 
 const formWrapperStyle = css`
   display: flex;
@@ -17,7 +17,7 @@ export class SelectColorPage extends React.Component {
         return <div css={formWrapperStyle}>
             <CirclePicker
                 color={ this.props.color }
-                colors={defaultColorChoices}
+                colors={DEFAULT_COLORS}
                 onChangeComplete={ this.props.onValueSelected }
             />
         </div>

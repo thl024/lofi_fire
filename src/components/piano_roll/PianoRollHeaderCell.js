@@ -3,13 +3,15 @@
 import React from 'react';
 import { jsx, css } from '@emotion/react'
 import {connect} from "react-redux";
-import {NUM_MEASURES} from "../../../utils/constants";
+import {NUM_MEASURES} from "../../utils/constants";
+import {mainThemeColor, mainThemeColorLight} from "../../styles/colors";
 
 const pianoRollRowHeaderTextStyle = css`
   color: #FFFFFF;
   font-size: 1vw;
-  padding-left: 5px;
+  padding-left: 3px;
   margin: 0 0 0 0;
+  text-align: left;
 `
 
 class PianoRollHeaderCell extends React.Component {
@@ -32,13 +34,22 @@ class PianoRollHeaderCell extends React.Component {
         }
 
         // Color in ticks during playback
-        let color = "#757575";
+        let color = mainThemeColor;
         if (this.props.i === this.props.playIndex) {
             color = "#FF9800";
         }
         let pianoRollRowHeaderItem = css`
           flex-grow: 1;
           background-color: ${color};
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          &:nth-of-type(1)  {
+            border-left: solid 2px #BDBDBD
+          }
+          &:nth-of-type(4n) {
+            border-right: solid 2px #BDBDBD;
+          }
         `
 
         return <div css={pianoRollRowHeaderItem} key={"h"+this.props.i.toString()}>

@@ -2,14 +2,14 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/react'
-import {IconCircleButton} from "../common/IconCircleButton";
-import {InstrumentModal} from "./InstrumentModal";
+import {InstrumentModal} from "../modals/InstrumentModal";
 import EditIcon from '@material-ui/icons/Edit';
+import {ButtonArray} from "./ButtonArray";
 
 const instrumentRowWrapperStyle = css`
   /*flex-basis: 100px*/
   height: 50px;
-  border-bottom: #BDBDBD 1px solid;
+  //border-bottom: #BDBDBD 1px solid;
   cursor: pointer;
 
   /* Flexbox */
@@ -17,7 +17,18 @@ const instrumentRowWrapperStyle = css`
   flex-direction: row;
 `
 
+const colorBoxStyle = css`
+  flex-basis: 25px;
+`
+
 const instrumentTextStyle = css`
+  /*  Flexbox  */
+  flex-grow: 10;
+  text-align: left;
+  padding: 0 15px 0 15px;
+`
+
+const buttonArrayWrapperStyle = css`
   /*  Flexbox  */
   flex-grow: 10;
 `
@@ -26,9 +37,8 @@ export class InstrumentListRow extends React.Component {
 
     constructor(props) {
         super(props);
-        this.onSelectWithFilter = this.onSelectWithFilter.bind(this);
+        this.onSelect = this.onSelect.bind(this);
         this.onRefreshWithIndex = this.onRefreshWithIndex.bind(this);
-        this.onEditModalPopup = this.onEditModalPopup.bind(this);
         this.onDeleteWithIndex = this.onDeleteWithIndex.bind(this);
 
         this.openEditModal = this.openEditModal.bind(this);
@@ -48,26 +58,15 @@ export class InstrumentListRow extends React.Component {
             this.state.editModalOpen !== nextState.editModalOpen
     }
 
-    onSelectWithFilter() {
+    onSelect() {
         this.props.onSelect(this.props.index)
     }
 
-    onRefreshWithIndex(e) {
-        e.stopPropagation();
+    onRefreshWithIndex() {
         this.props.onRefresh(this.props.index);
     }
 
-    onEditInstrumentFinish(name, color) {
-        this.props.onEditInstrument(this.props.index, name, color)
-    }
-
-    onEditModalPopup(e) {
-        e.stopPropagation();
-        this.openEditModal();
-    }
-
-    onDeleteWithIndex(e) {
-        e.stopPropagation();
+    onDeleteWithIndex() {
         this.props.onDeleteInstrument(this.props.index);
     }
 
@@ -87,9 +86,14 @@ export class InstrumentListRow extends React.Component {
         })
     }
 
+    onEditInstrumentFinish(name, color) {
+        this.props.onEditInstrument(this.props.index, name, color)
+    }
+
     render() {
         console.log("Rerender Instrument List Row: " + this.props.index)
         let instrumentText = this.props.instrument
+
         // TODO more elegant way to indicate selected row
         if (this.props.selected) {
             instrumentText = "> " + this.props.instrument
@@ -107,13 +111,14 @@ export class InstrumentListRow extends React.Component {
                 onNotifyInstrumentChange={this.onEditInstrumentFinish} />;
         }
 
-        return <div style={{backgroundColor: this.props.color}}
-                    css={instrumentRowWrapperStyle} onClick={this.onSelectWithFilter}>
-            <p css={instrumentTextStyle}>{instrumentText}</p>
-            <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="refresh" onClick={this.onRefreshWithIndex} />
-            <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="edit" onClick={this.onEditModalPopup} />
-            <IconCircleButton color="#757575" hoverColor="#BDBDBD" icon="delete" onClick={this.onDeleteWithIndex} />
+        return <div css={instrumentRowWrapperStyle} onClick={this.onSelect}>
+            <div style={{backgroundColor: this.props.color}} css={colorBoxStyle}/>
+            <p css={instrumentTextStyle}> {instrumentText}</p>
 
+            <ButtonArray css={buttonArrayWrapperStyle}
+                         onEdit={this.openEditModal}
+                         onDelete={this.onDeleteWithIndex}
+                         onRefresh={this.onRefreshWithIndex} />
             {modal}
         </div>
     }

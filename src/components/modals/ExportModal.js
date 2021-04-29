@@ -33,7 +33,7 @@ export class ExportModal extends React.Component {
 
     render() {
         // TODO -- config on the url
-        let url = "localhost:3000/projects/" + this.props.pid;
+        let url = "localhost:3000/project/" + this.props.pid;
         let body = <div css={modalBodyStyle}>
             <h2 css={modalTitleStyle}>{"Export"}</h2>
             <p>Access your saved song at: <a href={url}>{url}</a></p>

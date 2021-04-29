@@ -1,6 +1,6 @@
 // TODO setup all playback functionality here, export functionality here
 import {AudioController} from "./audio/audio_controller";
-import {ALL_KEYS, defaultColorChoices} from "../utils/constants";
+import {ALL_KEYS, DEFAULT_COLORS} from "../utils/constants";
 import {audio_metadata} from "./audio_metadata";
 import {v4 as uuidv4} from "uuid";
 import {generatePayload, initializeEmptyData} from "../utils/utils";
@@ -42,7 +42,7 @@ export class MainController {
 
         // No project id
         if (projectData === null) {
-            this.onCreateInstrument(Object.keys(audio_metadata)[0], defaultColorChoices[0]);
+            this.onCreateInstrument(Object.keys(audio_metadata)[0], DEFAULT_COLORS[0]);
         } else { // Project id included
             // Project details
             projectData.instruments.forEach((inst) => {
@@ -79,11 +79,9 @@ export class MainController {
             // Handle callbacks for loading
             this.numInstrumentsLoaded += 1;
             if (this.numInstrumentsLoaded === this.numInstrumentsToLoad) {
-                console.log(store.getState())
-
                 // Update redux with loading
                 store.dispatch(setLoading(false));
-                // store.dispatch(setIndividualLoading(false));
+                store.dispatch(setIndividualLoading(false));
             }
         });
     }
@@ -97,20 +95,26 @@ export class MainController {
             id: state.ids[index],
             name: instrumentName,
             data: state.data[index],
-            color: instrumentColor
+            color: instrumentColor,
+            index: index
         }
 
-        this.audioController.unloadInstrument(state.ids[index])
+        // Same instrument, only the color changed, no need to reload
+        if (instrumentName === state.names[index]) {
+            // Notify redux of edited instrument
+            store.dispatch(editInstrument(editedInstrument))
+            return;
+        }
 
-        // Load instrument
-        this.audioController.loadInstrument(editedInstrument, (err) => {
+        // Different instrument specified
+        this.audioController.unloadInstrument(state.ids[index])
+        this.audioController.loadInstrument(editedInstrument, (err) => { // Load new instrument
             if (err) {
                 console.log("Failed to load instrument: " + instrumentName + "; " + err.toString());
                 return;
             }
 
             // Notify redux of edited instrument
-            editedInstrument.index = index;
             store.dispatch(editInstrument(editedInstrument))
         });
     }

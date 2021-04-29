@@ -3,7 +3,9 @@ export const NUM_MEASURES = 8;
 export const MINIMUM_BPM = 50;
 export const MAXIMUM_BPM = 150;
 
-export const defaultColorChoices = ['#F47373', '#ff8a65', '#fcb500',
+export const APP_NAME="Muselab";
+
+export const DEFAULT_COLORS = ['#F47373', '#ff8a65', '#fcb500',
     '#ffdab9', '#dce775',
     '#98FB98', '#37D67A', '#B8Bc86',
     '#add8e6', '#2CCCE4', '#3792cb',
