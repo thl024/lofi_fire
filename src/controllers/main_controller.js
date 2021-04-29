@@ -186,9 +186,11 @@ export class MainController {
         this.seedInstruments(null);
     }
 
-    export(callback, err_callback) {
+    export(callback) {
         let state = store.getState();
         let instruments = []
+
+        // Convert data into appropriate format
         for (let i = 0; i < state.names.length; i++) {
             instruments.push({
                 name: state.names[i],
@@ -198,24 +200,16 @@ export class MainController {
             })
         }
 
-
+        // Generate payload
         let projectPayload = {
             pid: this.pid,
             instruments: instruments,
         }
 
         saveProjectState(projectPayload).then((res) => {
-            console.log(res);
+            callback(res.pid, null);
         }).catch((err) => {
-            console.log(err);
+            callback(null, err)
         })
-
-        // saveProjectState(generatePayload(projectPayload), (res) => {
-        //     // callback(res.pid);
-        //     console.log(res);
-        // }, (err) =>  {
-        //     // err_callback(err)
-        //     console.log(err)
-        // });
     }
 }
