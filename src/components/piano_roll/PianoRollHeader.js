@@ -14,7 +14,7 @@ const pianoRollRowHeaderWrapperStyle = css`
   flex-direction: row;
 
   /*  CSS Properties  */
-  border-bottom: solid 1px #BDBDBD;
+  //border-bottom: solid 1px #BDBDBD;
   
   height: 50px;
 `

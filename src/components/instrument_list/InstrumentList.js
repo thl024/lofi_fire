@@ -8,22 +8,17 @@ import {
     refreshInstrument,
     selectInstrument
 } from "../../redux/actions";
-import {InstrumentModal} from "../modals/InstrumentModal";
+import {NewInstrumentModal} from "../modals/NewInstrumentModal";
 import AddIcon from "@material-ui/icons/Add";
 import {InstrumentListHeader} from "./InstrumentListHeader";
 
 const instrumentListWrapperStyle = css`
-  //flex-grow: 0.5;
-  
-  //border-bottom: solid 2px #757575;
-  //border-top: solid 2px #757575;
+  border-right: solid 2px #BDBDBD;
 
   /* Flexbox */
   display:flex;
   flex-basis: 300px;
   flex-direction: column;
-  
-  //background-color: #ffd3b4;
 `
 
 const instrumentListStyle = css`
@@ -37,10 +32,8 @@ const instrumentListStyle = css`
 `
 
 const scrollAreaStyle = css`
-  /*height: 480px;*/
   overflow: scroll;
   white-space: nowrap;
-  /*flex-grow: 3;*/
 
   flex-grow: 1;
   overflow-x: hidden;
@@ -48,49 +41,50 @@ const scrollAreaStyle = css`
 
 class InstrumentList extends React.Component {
 
-    constructor(props) {
-        super(props);
+    // constructor(props) {
+    //     super(props);
 
-        this.openAddModal = this.openAddModal.bind(this);
-        this.closeAddModal = this.closeAddModal.bind(this);
+        // this.openAddModal = this.openAddModal.bind(this);
+        // this.closeAddModal = this.closeAddModal.bind(this);
+        //
+        // this.state = {
+        //     addModalOpen: false,
+        // }
+    // }
 
-        this.state = {
-            addModalOpen: false,
-        }
-    }
-
-    openAddModal() {
-        this.setState(state => {
-            return {
-                addModalOpen: true
-            }
-        })
-    }
-
-    closeAddModal() {
-        this.setState(state => {
-            return {
-                addModalOpen: false
-            }
-        })
-    }
+    // openAddModal() {
+    //     this.setState(state => {
+    //         return {
+    //             addModalOpen: true
+    //         }
+    //     })
+    // }
+    //
+    // closeAddModal() {
+    //     this.setState(state => {
+    //         return {
+    //             addModalOpen: false
+    //         }
+    //     })
+    // }
 
     render() {
         console.log("Rerender Instrument List");
 
-        let modal = <div />
-        if (this.state.addModalOpen) {
-            modal = <InstrumentModal
-                open={this.state.addModalOpen}
-                onClose={this.closeAddModal}
-                action="Add"
-                actionIcon={<AddIcon />}
-                onNotifyInstrumentChange={this.props.onCreateInstrument} />;
-        }
+        // let modal = <div />
+        // if (this.state.addModalOpen) {
+        //     modal = <NewInstrumentModal
+        //         open={this.state.addModalOpen}
+        //         onClose={this.closeAddModal}
+        //         action="Add"
+        //         actionIcon={<AddIcon />}
+        //         onNotifyInstrumentChange={this.props.onCreateInstrument} />;
+        // }
 
         return <div css={instrumentListWrapperStyle}>
                 <ul css={instrumentListStyle}>
-                    <InstrumentListHeader openAddModal={this.openAddModal}/>
+                    {/*<InstrumentListHeader openAddModal={this.openAddModal}/>*/}
+                    <InstrumentListHeader />
                     <div css={scrollAreaStyle}>
                         {this.props.names.map((name, index, _) => {
                             const selected = index === this.props.selectedIndex;
@@ -106,7 +100,7 @@ class InstrumentList extends React.Component {
                         })}
                     </div>
                 </ul>
-            {modal}
+            {/*{modal}*/}
         </div>
     }
 }

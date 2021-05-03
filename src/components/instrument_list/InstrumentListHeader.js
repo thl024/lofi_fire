@@ -39,8 +39,7 @@ export class InstrumentListHeader extends React.Component {
         const instrumentListHeaderStyle = css`
           display:flex;
           flex-direction: row;
-          // border-bottom: solid 2px ${mainThemeColorLight};
-          background-color: ${mainThemeColor};
+          background-color: ${mainThemeColorLight};
           height:50px;
         `
 
@@ -49,7 +48,7 @@ export class InstrumentListHeader extends React.Component {
                     <p css={instrumentListHeaderTextStyle}>Instruments</p>
                     </div>
                     <IconButton css={buttonStyle} aria-label="add" color={addColor}
-                                onClick={this.props.openAddModal}>
+                                onClick={this.props.newInstrument}>
                         <AddIcon />
                     </IconButton>
                 </div>

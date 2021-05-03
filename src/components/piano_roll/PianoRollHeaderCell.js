@@ -4,12 +4,11 @@ import React from 'react';
 import { jsx, css } from '@emotion/react'
 import {connect} from "react-redux";
 import {NUM_MEASURES} from "../../utils/constants";
-import {mainThemeColor, mainThemeColorLight} from "../../styles/colors";
+import {mainThemeColor, mainThemeColorLight, secondaryTheme, tertiaryTheme} from "../../styles/colors";
 
 const pianoRollRowHeaderTextStyle = css`
   color: #FFFFFF;
-  font-size: 1vw;
-  padding-left: 3px;
+  font-size: 1.2vw;
   margin: 0 0 0 0;
   text-align: left;
 `
@@ -34,7 +33,7 @@ class PianoRollHeaderCell extends React.Component {
         }
 
         // Color in ticks during playback
-        let color = mainThemeColor;
+        let color = mainThemeColorLight;
         if (this.props.i === this.props.playIndex) {
             color = "#FF9800";
         }
@@ -44,12 +43,12 @@ class PianoRollHeaderCell extends React.Component {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          &:nth-of-type(1)  {
-            border-left: solid 2px #BDBDBD
-          }
-          &:nth-of-type(4n) {
-            border-right: solid 2px #BDBDBD;
-          }
+          //&:nth-of-type(1)  {
+          //  border-left: solid 2px #BDBDBD
+          //}
+          //&:nth-of-type(4n) {
+          //  border-right: solid 2px #BDBDBD;
+          //}
         `
 
         return <div css={pianoRollRowHeaderItem} key={"h"+this.props.i.toString()}>

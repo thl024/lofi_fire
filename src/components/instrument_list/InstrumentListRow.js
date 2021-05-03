@@ -2,14 +2,13 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/react'
-import {InstrumentModal} from "../modals/InstrumentModal";
+import {NewInstrumentModal} from "../modals/NewInstrumentModal";
 import EditIcon from '@material-ui/icons/Edit';
 import {ButtonArray} from "./ButtonArray";
 
 const instrumentRowWrapperStyle = css`
   /*flex-basis: 100px*/
   height: 50px;
-  //border-bottom: #BDBDBD 1px solid;
   cursor: pointer;
 
   /* Flexbox */
@@ -31,6 +30,15 @@ const instrumentTextStyle = css`
 const buttonArrayWrapperStyle = css`
   /*  Flexbox  */
   flex-grow: 10;
+`
+
+const borderWrapper = css`
+  border-bottom: #BDBDBD 1px solid;
+  
+  /* Flexbox */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
 `
 
 export class InstrumentListRow extends React.Component {
@@ -101,7 +109,7 @@ export class InstrumentListRow extends React.Component {
 
         let modal = <div />;
         if (this.state.editModalOpen) {
-            modal = <InstrumentModal
+            modal = <NewInstrumentModal
                 open={this.state.editModalOpen}
                 name={this.props.instrument}
                 color={this.props.color}
@@ -113,12 +121,14 @@ export class InstrumentListRow extends React.Component {
 
         return <div css={instrumentRowWrapperStyle} onClick={this.onSelect}>
             <div style={{backgroundColor: this.props.color}} css={colorBoxStyle}/>
+            <div css={borderWrapper}>
             <p css={instrumentTextStyle}> {instrumentText}</p>
 
             <ButtonArray css={buttonArrayWrapperStyle}
                          onEdit={this.openEditModal}
                          onDelete={this.onDeleteWithIndex}
                          onRefresh={this.onRefreshWithIndex} />
+            </div>
             {modal}
         </div>
     }

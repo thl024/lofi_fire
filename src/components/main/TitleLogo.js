@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import React from "react";
-import {APP_NAME} from "../utils/constants";
+import {APP_NAME} from "../../utils/constants";
 import {jsx, css} from "@emotion/react";
 
 const titleStyle = css`

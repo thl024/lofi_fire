@@ -10,8 +10,7 @@ import { jsx, css } from '@emotion/react'
 import {
     mainThemeColor,
 } from "../../styles/colors";
-import EditIcon from "@material-ui/icons/Edit";
-import {IconButton} from "@material-ui/core";
+import {Button, IconButton} from "@material-ui/core";
 
 const playbackButtonWrapperStyle = css`
   display: flex;
@@ -42,6 +41,12 @@ const playbackStyle  = css`
   flex-grow: 1;
 `
 
+const buttonStyle = css`
+  &:focus {
+    background-color: #FFFFFF;
+  }
+`
+
 // const p = css`
 //   &:focus {
 //     background-color: #FFFFFF;
@@ -52,25 +57,19 @@ export class ControlBar extends React.Component {
     render() {
         console.log("Rerender Control Bar");
 
-        let playStyle = {
-            '& .focus': {
-                backgroundColor: '#FFFFFF',
-            }
-        }
-
         return <div css={playbackWrapperStyle}>
             <div css={playbackStyle}>
                 <div css={playbackButtonWrapperStyle}>
-                    <IconButton css={playStyle} aria-label="play" color={mainThemeColor} onClick={this.props.play}>
+                    <IconButton css={buttonStyle} aria-label="play" color={mainThemeColor} onClick={this.props.play}>
                         <PlayArrowIcon />
                     </IconButton>
-                    <IconButton css={playStyle} aria-label="stop" color={mainThemeColor} onClick={this.props.stop}>
+                    <IconButton css={buttonStyle} aria-label="stop" color={mainThemeColor} onClick={this.props.stop}>
                         <StopIcon />
                     </IconButton>
-                    <IconButton css={playStyle} aria-label="refresh" color={mainThemeColor} onClick={this.props.refresh}>
+                    <IconButton css={buttonStyle} aria-label="refresh" color={mainThemeColor} onClick={this.props.refresh}>
                         <RefreshIcon />
                     </IconButton>
-                    <IconButton css={playStyle} aria-label="export" color={mainThemeColor} onClick={this.props.export}>
+                    <IconButton css={buttonStyle} aria-label="export" color={mainThemeColor} onClick={this.props.export}>
                         <SaveIcon />
                     </IconButton>
 
@@ -82,6 +81,20 @@ export class ControlBar extends React.Component {
                 <div css={playbackSliderWrapperStyle}>
                     <BPMSlider updateBPM={this.props.updateBPM}/>
                 </div>
+                <div css={playbackButtonWrapperStyle}>
+                {/*<IconButton css={playStyle} aria-label="instrument" color={mainThemeColor} >*/}
+                {/*    <img src={process.env.PUBLIC_URL + '/guitar-icon.png'} height={25} width={25}/>*/}
+                {/*</IconButton>*/}
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        css={buttonStyle}
+                        startIcon={<img src={process.env.PUBLIC_URL + '/guitar-icon.png'} alt={"instruments"}/>}
+                    >
+                        Instruments
+                    </Button>
+                </div>
+
             </div>
         </div>
     }

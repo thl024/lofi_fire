@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import {Daw} from "./components/Daw";
+import {Daw} from "./components/main/Daw";
 import { jsx } from '@emotion/react'
 import {connect} from "react-redux";
 import {LoadingPage} from "./components/common/LoadingPage";
@@ -17,6 +17,7 @@ function App(props) {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
+        backgroundColor: mainThemeColor
     }
 
     return (<div css={appStyle}>

@@ -7,7 +7,8 @@ import { jsx, css } from '@emotion/react'
 import { connect } from 'react-redux'
 import {changeBPM} from "../../redux/actions";
 import {MAXIMUM_BPM, MINIMUM_BPM} from "../../utils/constants";
-import {mainThemeColor} from "../../styles/colors";
+import {mainThemeColor, mainThemeColorDark} from "../../styles/colors";
+import SpeedIcon from '@material-ui/icons/Speed';
 
 // CSS
 const sliderDivStyle = css`
@@ -18,7 +19,7 @@ const sliderDivStyle = css`
 `
 
 const bpmTextStyle = css`
-  color: #FF9800;
+  color: ${mainThemeColorDark};
   font-family: GillSans, Calibri, Trebuchet, sans-serif;
   font-size: medium;
   padding: 0 10px 0 10px;
@@ -42,11 +43,11 @@ class BPMSlider extends React.Component {
 
     render() {
         console.log("Rerender BPM Bar");
-
         // Slider color
         let sliderColor = mainThemeColor
         return <div css={sliderDivStyle}>
-            <p css={bpmTextStyle}>Tempo (BPM)</p>
+            {/*<p css={bpmTextStyle}>Tempo (BPM)</p>*/}
+            <SpeedIcon css={bpmTextStyle} />
             <Slider
                 css={bpmSliderStyle}
                 defaultValue={this.props.bpm}

@@ -15,6 +15,10 @@ const pianoRollWrapperStyle = css`
   /*  Parent flex properties */
   display: flex;
   flex-direction: column;
+  
+  background-color: #FFFFFF;
+  margin: 0 50px 0 50px;
+  box-shadow: 0 0 20px 0 rgba(0,0,0,0.12);
 `
 
 const pianoRollRowWrapperStyle = css`

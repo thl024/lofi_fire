@@ -1,5 +1,6 @@
 // Theme colors
 export const mainThemeColor = "#ffd3b4";
+export const mainThemeColorDark = "#FF9800"
 export const mainThemeColorLight = "#ffaaa7";
 export const secondaryTheme = "#d5ecc2";
 export const tertiaryTheme = "#98ddca";
