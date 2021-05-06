@@ -1,13 +1,14 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import React from 'react';
-import {ControlBar} from "../control_bar/ControlBar";
 import PianoRoll from "../piano_roll/PianoRoll";
-import {ExportModal} from "../modals/ExportModal";
-import LoadingBar from "../common/LoadingBar";
+import ExportModal from "../modals/ExportModal";
+import InstrumentModal from "../modals/InstrumentModal";
 import {jsx, css} from "@emotion/react";
-import {TitleLogo} from "./TitleLogo";
 import {TopBar} from "./TopBar";
+import {Grow} from "@material-ui/core";
+import {connect} from "react-redux";
+import {changeExportModalState, setPid} from "../../redux/actions";
 
 const mainAppStyle = css`
   flex-grow: 15;
@@ -15,39 +16,20 @@ const mainAppStyle = css`
   flex-direction: column;
 `
 
-export class Daw extends React.Component {
+class Daw extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            pid: null,
-            exportModalOpen: false
-        }
-
         this.export = this.export.bind(this);
-        this.closeExportModal = this.closeExportModal.bind(this);
     }
 
     export() {
         this.props.export((res, err) => {
             if (err === null) {
-                this.setState(state => {
-                    return {
-                        pid: res,
-                        exportModalOpen: true
-                    }
-                })
+                this.props.setPid(res);
+                this.props.onOpen();
             } else {
                 console.log("Unable to save project: " + err);
-            }
-        })
-    }
-
-    closeExportModal() {
-        this.setState(state => {
-            return {
-                exportModalOpen: false
             }
         })
     }
@@ -55,17 +37,26 @@ export class Daw extends React.Component {
     render() {
         console.log("Rerender DAW");
         return <div css={mainAppStyle}>
-            <TopBar updateBPM={this.props.updateBPM}
-                    play={this.props.play}
-                    stop={this.props.stop}
-                    refresh={this.props.refresh}
-                    export={this.export}  />
+            <Grow in={true}>
+                <TopBar updateBPM={this.props.updateBPM}
+                        play={this.props.play}
+                        stop={this.props.stop}
+                        refresh={this.props.refresh}
+                        export={this.export}  />
+            </Grow>
             <PianoRoll notifyNote={this.props.notifySingleNote} />
-            <ExportModal
-                open={this.state.exportModalOpen}
-                onClose={this.closeExportModal}
-                pid={this.state.pid}
-            />
+
+            {/* Manage modals -- unfortunately, some unnecessary rerenders happening here */}
+            <ExportModal />
+            <InstrumentModal />
         </div>
     }
 }
+// Redux connection
+export default connect(
+    null,
+    (dispatch) => ({
+        onOpen: () => dispatch(changeExportModalState(true)),
+        setPid: (pid) => dispatch(setPid(pid))
+    })
+)(Daw)

@@ -3,7 +3,7 @@
 import React from "react";
 import {jsx, css} from "@emotion/react";
 import {TitleLogo} from "./TitleLogo";
-import {ControlBar} from "../control_bar/ControlBar";
+import ControlBar from "../control_bar/ControlBar";
 import LoadingBar from "../common/LoadingBar";
 
 const topBarStyle = css`
@@ -23,7 +23,7 @@ export class TopBar extends React.Component {
                         play={this.props.play}
                         stop={this.props.stop}
                         refresh={this.props.refresh}
-                        export={this.export} />
+                        export={this.props.export} />
             <LoadingBar/>
         </div>
     }

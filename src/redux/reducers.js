@@ -1,11 +1,17 @@
 // Setup initial state
 import {
-    ADD_INSTRUMENT,
-    CHANGE_BPM, DELETE_INSTRUMENT, EDIT_INSTRUMENT, INDIV_LOADING, LOADING,
+    CHANGE_BPM,
+    INDIV_LOADING,
+    INSTRUMENT_ADD,
+    INSTRUMENT_DELETE,
+    INSTRUMENT_EDIT,
+    INSTRUMENT_REFRESH,
+    INSTRUMENT_SELECT,
+    LOADING,
+    MODAL_EXPORT,
+    MODAL_INSTRUMENT,
     ON_PLAY_BEAT,
-    REFRESH_INSTRUMENT,
-    RESET,
-    SELECT_INSTRUMENT,
+    RESET, SET_PID,
     TOGGLE_PIANO_ROLL_NOTE
 } from "./actions";
 import {initializeEmptyData} from "../utils/utils";
@@ -17,6 +23,10 @@ const initialState = {
     playIndex: -1,
     loading: false,
     indivLoading: false,
+
+    pid: null,
+    exportModalOpen: false,
+    instrumentModalOpen: false,
 
     // Instrument objects are split into many fields to allow for different components to access different fields
     // This reduces potential lag from over re-rendering
@@ -35,13 +45,12 @@ export default function appReducer(state = initialState, action) {
         /**
          * Instrument Actions
          */
-        case ADD_INSTRUMENT:
+        case INSTRUMENT_ADD:
             // const instruments = [...state.instruments, action.payload]
             ids = [...state.ids, action.payload.id]
             names = [...state.names, action.payload.name]
             data = [...state.data, action.payload.data]
 
-            console.log(data);
             colors = [...state.colors, action.payload.color]
 
             return {
@@ -52,7 +61,7 @@ export default function appReducer(state = initialState, action) {
                 colors: colors
             };
 
-        case EDIT_INSTRUMENT:
+        case INSTRUMENT_EDIT:
             index = action.payload.index;
             names = [...state.names]
             colors = [...state.colors]
@@ -66,7 +75,7 @@ export default function appReducer(state = initialState, action) {
                 colors: colors
             };
 
-        case DELETE_INSTRUMENT:
+        case INSTRUMENT_DELETE:
             ids = [...state.ids]
             names = [...state.names]
             data = [...state.data]
@@ -85,12 +94,12 @@ export default function appReducer(state = initialState, action) {
                 colors: colors
             }
 
-        case SELECT_INSTRUMENT:
+        case INSTRUMENT_SELECT:
             return {
                 ...state,
                 selectedIndex: action.payload
             }
-        case REFRESH_INSTRUMENT:
+        case INSTRUMENT_REFRESH:
             let emptyData = initializeEmptyData();
             data = [...state.data]
             data[action.payload] = emptyData
@@ -145,6 +154,21 @@ export default function appReducer(state = initialState, action) {
             }
 
         /**
+         * Modal reduces
+         */
+        case MODAL_EXPORT:
+            return {
+                ...state,
+                exportModalOpen: action.payload
+            }
+
+        case MODAL_INSTRUMENT:
+            return {
+                ...state,
+                instrumentModalOpen: action.payload
+            }
+
+        /**
          * All use reducers
          */
         case RESET:
@@ -160,6 +184,12 @@ export default function appReducer(state = initialState, action) {
             return {
                 ...state,
                 indivLoading: action.payload
+            }
+
+        case SET_PID:
+            return {
+                ...state,
+                pid: action.payload
             }
 
         default:

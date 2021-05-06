@@ -8,13 +8,9 @@ import {
     refreshInstrument,
     selectInstrument
 } from "../../redux/actions";
-import {NewInstrumentModal} from "../modals/NewInstrumentModal";
-import AddIcon from "@material-ui/icons/Add";
 import {InstrumentListHeader} from "./InstrumentListHeader";
 
 const instrumentListWrapperStyle = css`
-  border-right: solid 2px #BDBDBD;
-
   /* Flexbox */
   display:flex;
   flex-basis: 300px;
@@ -41,50 +37,12 @@ const scrollAreaStyle = css`
 
 class InstrumentList extends React.Component {
 
-    // constructor(props) {
-    //     super(props);
-
-        // this.openAddModal = this.openAddModal.bind(this);
-        // this.closeAddModal = this.closeAddModal.bind(this);
-        //
-        // this.state = {
-        //     addModalOpen: false,
-        // }
-    // }
-
-    // openAddModal() {
-    //     this.setState(state => {
-    //         return {
-    //             addModalOpen: true
-    //         }
-    //     })
-    // }
-    //
-    // closeAddModal() {
-    //     this.setState(state => {
-    //         return {
-    //             addModalOpen: false
-    //         }
-    //     })
-    // }
-
     render() {
         console.log("Rerender Instrument List");
 
-        // let modal = <div />
-        // if (this.state.addModalOpen) {
-        //     modal = <NewInstrumentModal
-        //         open={this.state.addModalOpen}
-        //         onClose={this.closeAddModal}
-        //         action="Add"
-        //         actionIcon={<AddIcon />}
-        //         onNotifyInstrumentChange={this.props.onCreateInstrument} />;
-        // }
-
         return <div css={instrumentListWrapperStyle}>
                 <ul css={instrumentListStyle}>
-                    {/*<InstrumentListHeader openAddModal={this.openAddModal}/>*/}
-                    <InstrumentListHeader />
+                    <InstrumentListHeader startAddInstrument={this.props.startAddInstrument} />
                     <div css={scrollAreaStyle}>
                         {this.props.names.map((name, index, _) => {
                             const selected = index === this.props.selectedIndex;
@@ -100,7 +58,6 @@ class InstrumentList extends React.Component {
                         })}
                     </div>
                 </ul>
-            {/*{modal}*/}
         </div>
     }
 }

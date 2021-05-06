@@ -48,7 +48,7 @@ export class InstrumentListHeader extends React.Component {
                     <p css={instrumentListHeaderTextStyle}>Instruments</p>
                     </div>
                     <IconButton css={buttonStyle} aria-label="add" color={addColor}
-                                onClick={this.props.newInstrument}>
+                                onClick={this.props.startAddInstrument}>
                         <AddIcon />
                     </IconButton>
                 </div>

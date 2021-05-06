@@ -1,16 +1,34 @@
 // Action types
+export const MODAL_EXPORT = "modal/export"
+export const MODAL_INSTRUMENT = "modal/instrument"
+
 export const CHANGE_BPM = "bpm/changed";
-export const ADD_INSTRUMENT = "instrument/new";
-export const EDIT_INSTRUMENT = "instrument/edit";
-export const DELETE_INSTRUMENT = "instrument/delete";
-export const SELECT_INSTRUMENT = "instrument/select";
-export const REFRESH_INSTRUMENT = "instrument/refresh";
+export const INSTRUMENT_ADD = "instrument/new";
+export const INSTRUMENT_EDIT = "instrument/edit";
+export const INSTRUMENT_DELETE = "instrument/delete";
+export const INSTRUMENT_SELECT = "instrument/select";
+export const INSTRUMENT_REFRESH = "instrument/refresh";
 export const TOGGLE_PIANO_ROLL_NOTE = "pianoroll/toggle";
 export const ON_PLAY_BEAT = "onplay/beat";
 
 export const RESET = "reset";
 export const LOADING = "loading";
 export const INDIV_LOADING = "indiv_loading";
+export const SET_PID = "pid";
+
+/**
+ * Modal Actions
+ */
+export const changeExportModalState = content => ({
+    type: MODAL_EXPORT,
+    payload: content
+})
+
+export const changeInstrumentListModalState = content => ({
+    type: MODAL_INSTRUMENT,
+    payload: content
+})
+
 /**
  * Playback Actions
  */
@@ -23,27 +41,27 @@ export const changeBPM = content => ({
  * Instrument Actions
  */
 export const addInstrument = content => ({
-    type: ADD_INSTRUMENT,
+    type: INSTRUMENT_ADD,
     payload: content
 })
 
 export const editInstrument = content => ({
-    type: EDIT_INSTRUMENT,
+    type: INSTRUMENT_EDIT,
     payload: content
 })
 
 export const deleteInstrument = content => ({
-    type: DELETE_INSTRUMENT,
+    type: INSTRUMENT_DELETE,
     payload: content
 });
 
 export const selectInstrument = content => ({
-    type: SELECT_INSTRUMENT,
+    type: INSTRUMENT_SELECT,
     payload: content
 })
 
 export const refreshInstrument = content => ({
-    type: REFRESH_INSTRUMENT,
+    type: INSTRUMENT_REFRESH,
     payload: content
 })
 
@@ -63,6 +81,11 @@ export const onPlayBeat = content => ({
 /**
  * All use actions
  */
+export const setPid = content => ({
+    type: SET_PID,
+    payload: content
+})
+
 export const reset = content => ({
     type: RESET,
     payload: null

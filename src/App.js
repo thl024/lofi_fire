@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import {Daw} from "./components/main/Daw";
+import Daw from "./components/main/Daw";
 import { jsx } from '@emotion/react'
 import {connect} from "react-redux";
 import {LoadingPage} from "./components/common/LoadingPage";

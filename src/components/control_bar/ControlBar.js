@@ -11,6 +11,8 @@ import {
     mainThemeColor,
 } from "../../styles/colors";
 import {Button, IconButton} from "@material-ui/core";
+import {connect} from "react-redux";
+import {changeInstrumentListModalState} from "../../redux/actions";
 
 const playbackButtonWrapperStyle = css`
   display: flex;
@@ -47,13 +49,8 @@ const buttonStyle = css`
   }
 `
 
-// const p = css`
-//   &:focus {
-//     background-color: #FFFFFF;
-//   }
-// `
+class ControlBar extends React.Component {
 
-export class ControlBar extends React.Component {
     render() {
         console.log("Rerender Control Bar");
 
@@ -72,25 +69,19 @@ export class ControlBar extends React.Component {
                     <IconButton css={buttonStyle} aria-label="export" color={mainThemeColor} onClick={this.props.export}>
                         <SaveIcon />
                     </IconButton>
-
-                    {/*<IconCircleButton color={mainThemeColor} hoverColor={mainThemeColorLight} icon="play_arrow" onClick={this.props.play} />*/}
-                    {/*<IconCircleButton color={stopColor} hoverColor={stopColorHighlight} icon="stop" onClick={this.props.stop} />*/}
-                    {/*<IconCircleButton color={refreshColor} hoverColor={refreshColorHighlight} icon="refresh" onClick={this.props.refresh} />*/}
-                    {/*<IconCircleButton color={exportColor} hoverColor={exportColorHighlight} icon="save" onClick={this.props.export} />*/}
                 </div>
                 <div css={playbackSliderWrapperStyle}>
                     <BPMSlider updateBPM={this.props.updateBPM}/>
                 </div>
                 <div css={playbackButtonWrapperStyle}>
-                {/*<IconButton css={playStyle} aria-label="instrument" color={mainThemeColor} >*/}
-                {/*    <img src={process.env.PUBLIC_URL + '/guitar-icon.png'} height={25} width={25}/>*/}
-                {/*</IconButton>*/}
                     <Button
                         variant="contained"
                         color="secondary"
                         css={buttonStyle}
-                        startIcon={<img src={process.env.PUBLIC_URL + '/guitar-icon.png'} alt={"instruments"}/>}
-                    >
+                        startIcon={
+                            <img src={process.env.PUBLIC_URL + '/guitar-icon.png'} alt={"instruments"}/>
+                        }
+                        onClick={this.props.onOpen}>
                         Instruments
                     </Button>
                 </div>
@@ -99,3 +90,11 @@ export class ControlBar extends React.Component {
         </div>
     }
 }
+
+// Redux connection
+export default connect(
+    null,
+    (dispatch) => ({
+        onOpen: () => dispatch(changeInstrumentListModalState(true)),
+    })
+)(ControlBar)

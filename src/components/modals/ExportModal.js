@@ -3,6 +3,8 @@
 import React from 'react';
 import {jsx, css} from "@emotion/react";
 import {Modal} from "@material-ui/core";
+import {connect} from "react-redux";
+import {changeExportModalState} from "../../redux/actions";
 
 const modalTitleStyle = css`
   text-align: center;
@@ -29,25 +31,37 @@ const modalBodyStyle=css`
   flex-direction: column;
 `
 
-export class ExportModal extends React.Component {
+class ExportModal extends React.Component {
 
     render() {
-        let exportModal = <div/>
-        if (this.props.open) {
-            // TODO -- config on the url
-            let url = "localhost:3000/project/" + this.props.pid;
 
-            exportModal = <Modal
-                css={modalStyle}
-                onClose={this.props.onClose}
-                open={this.props.open}>
-                <div css={modalBodyStyle}>
-                    <h2 css={modalTitleStyle}>{"Export"}</h2>
-                    <p>Access your saved song at: <a href={url}>{url}</a></p>
-                </div>
-            </Modal>
+        if (!this.props.open) {
+            return <div />
         }
 
-        return exportModal;
+        // TODO -- config on the url
+        let url = "localhost:3000/project/" + this.props.pid;
+
+        return <Modal
+            css={modalStyle}
+            onClose={this.props.onClose}
+            open={this.props.open}>
+            <div css={modalBodyStyle}>
+                <h2 css={modalTitleStyle}>{"Export"}</h2>
+                <p>Access your saved song at: <a href={url}>{url}</a></p>
+            </div>
+        </Modal>
     }
 }
+
+// Redux connection
+export default connect(
+    (state) => {
+        return {
+            open: state.exportModalOpen,
+            pid: state.pid,
+        }},
+    (dispatch) => ({
+        onClose: () => dispatch(changeExportModalState(false)),
+    })
+)(ExportModal)
