@@ -6,7 +6,7 @@ import React from "react";
 import {jsx, css} from '@emotion/react'
 import {connect} from "react-redux";
 import {changeInstrumentListModalState} from "../../redux/actions";
-import InstrumentList from '../instrument_list/InstrumentList'
+import {InstrumentPager} from "../instruments/InstrumentPager";
 
 const modalStyle = css`
   display: flex;
@@ -62,7 +62,7 @@ class InstrumentModal extends React.Component {
             }}>
             <Fade in={this.props.open}>
                 <div css={modalDivStyle}>
-                    <InstrumentList />
+                    <InstrumentPager />
                 </div>
             </Fade>
         </Modal>

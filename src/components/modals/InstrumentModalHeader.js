@@ -28,7 +28,7 @@ const headerTextStyle= css`
   flex-grow: 1;
 `
 
-export class InstrumentListHeader extends React.Component {
+export class InstrumentModalHeader extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         // Constant header, never need to update
@@ -48,7 +48,7 @@ export class InstrumentListHeader extends React.Component {
                     <p css={instrumentListHeaderTextStyle}>Instruments</p>
                     </div>
                     <IconButton css={buttonStyle} aria-label="add" color={addColor}
-                                onClick={this.props.startAddInstrument}>
+                                onClick={this.props.addInstrument}>
                         <AddIcon />
                     </IconButton>
                 </div>

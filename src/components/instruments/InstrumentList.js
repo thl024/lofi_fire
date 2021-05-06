@@ -8,7 +8,6 @@ import {
     refreshInstrument,
     selectInstrument
 } from "../../redux/actions";
-import {InstrumentListHeader} from "./InstrumentListHeader";
 
 const instrumentListWrapperStyle = css`
   /* Flexbox */
@@ -42,7 +41,6 @@ class InstrumentList extends React.Component {
 
         return <div css={instrumentListWrapperStyle}>
                 <ul css={instrumentListStyle}>
-                    <InstrumentListHeader startAddInstrument={this.props.startAddInstrument} />
                     <div css={scrollAreaStyle}>
                         {this.props.names.map((name, index, _) => {
                             const selected = index === this.props.selectedIndex;

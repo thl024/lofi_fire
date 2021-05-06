@@ -5,6 +5,7 @@ import { jsx, css } from '@emotion/react'
 import {NewInstrumentModal} from "../modals/NewInstrumentModal";
 import EditIcon from '@material-ui/icons/Edit';
 import {ButtonArray} from "./ButtonArray";
+import {audio_metadata} from "../../controllers/audio_metadata";
 
 const instrumentRowWrapperStyle = css`
   /*flex-basis: 100px*/
@@ -16,27 +17,33 @@ const instrumentRowWrapperStyle = css`
   flex-direction: row;
 `
 
+const imgStyle = css`
+  padding: 13px 13px 13px 13px;
+  opacity: 0.6;
+`
+
 const colorBoxStyle = css`
   flex-basis: 25px;
 `
 
 const instrumentTextStyle = css`
   /*  Flexbox  */
-  flex-grow: 10;
+  //flex-grow: 5;
   text-align: left;
   padding: 0 15px 0 15px;
 `
 
 const buttonArrayWrapperStyle = css`
   /*  Flexbox  */
-  flex-grow: 10;
+  //flex-grow: 5;
 `
 
 const borderWrapper = css`
   border-bottom: #BDBDBD 1px solid;
   
   /* Flexbox */
-  flex-grow: 1;
+  //flex-grow: 1;
+  
   display: flex;
   flex-direction: row;
 `
@@ -107,6 +114,14 @@ export class InstrumentListRow extends React.Component {
             instrumentText = "> " + this.props.instrument
         }
 
+        let imgSrc = process.env.PUBLIC_URL + '/type_images';
+        switch (audio_metadata[this.props.instrument].instType) {
+            case "toned": imgSrc += '/toned.png'; break;
+            case "perc": imgSrc += '/drum.png'; break;
+            case "sfx": imgSrc += '/sfx.png'; break;
+            default: break;
+        }
+
         let modal = <div />;
         if (this.state.editModalOpen) {
             modal = <NewInstrumentModal
@@ -122,9 +137,9 @@ export class InstrumentListRow extends React.Component {
         return <div css={instrumentRowWrapperStyle} onClick={this.onSelect}>
             <div style={{backgroundColor: this.props.color}} css={colorBoxStyle}/>
             <div css={borderWrapper}>
-            <p css={instrumentTextStyle}> {instrumentText}</p>
-
-            <ButtonArray css={buttonArrayWrapperStyle}
+                <img alt="instrument_icon" css={imgStyle} src={imgSrc} />
+                <p css={instrumentTextStyle}> {instrumentText}</p>
+                <ButtonArray css={buttonArrayWrapperStyle}
                          onEdit={this.openEditModal}
                          onDelete={this.onDeleteWithIndex}
                          onRefresh={this.onRefreshWithIndex} />
